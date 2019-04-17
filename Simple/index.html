@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html ufr>
+<head>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="helper.js"> </script>
+
+    <title>uFR Simple</title>
+</head>
+    <body>
+
+<div class="sidenav">
+
+  <a onclick="showAbout()" href="#">About</a>
+
+  <a onclick="showHome()" href="#">Home</a>
+
+  
+</div>
+
+        <div id="simplest_example_main_div" style="margin-left:10%; padding:1px 16px;height:1000px;">
+          <h2>uFR Simple</h2>
+          
+          <div id="reader_open_param_div>" style="float:left; width:100%">
+            <div id="open_div" style="float:left; width:250px; margin-bottom:10px;">
+        <button id="btnReaderOpen" onclick="ReaderOpen(this)"> READER OPEN</button>
+            </div>
+            <div style="float:left; width:200px" id="get_card_info_div">
+                <button id="btnGetCardIdEx" onclick="GetCardIdEx(this)"> GET CARD INFO</button> <br>
+            </div>
+            <div id="advanced_options" style="width:100%; float:left">
+            Advanced options
+            <input onclick="AdvancedOption()" id="checkAdvancedOption" type="checkbox"> </input> <br>
+            Reader type:<input class="adv_option" disabled value="" type ="text" id="reader_type" style="width:2%"></input>
+            Port name:<input class="adv_option" disabled value=""type ="text" id="port_name" style="width:7%"></input>
+            Port interface:<input class="adv_option" disabled value="" type ="text" id="port_interface" style="width:2%"></input>
+            arg: <input disabled class="adv_option" value="" type ="text" id="port_additional_arg" style="width:2%"></input>
+            </div>
+            <hr style="float:left; width:70%">
+        </div>
+          
+          <div id="simple_reader_and_card_info_div" style="float:left;width:100%;height:100px;">
+          
+          <div id="reader_info" style="text-align: left" >
+          
+          Reader Type:&nbsp&nbsp <input readonly type="text" id="reader_info_reader_type"> </input> <br>
+          Reader Serial: <input readonly type="text" id="reader_info_reader_serial"> </input> <br>
+          
+          </div>
+          
+          <div id="card_info">
+          
+          Card type: <input readonly id="card_type" type ="text"> </input> Uid Size: <input readonly type ="text" id="uid_size"> </input><br>
+          Card Serial: <input readonly type ="text" id="card_serial" style="width:60%"> </input>
+              
+          </div>
+          
+          <hr style="float:left; width:70%">
+          
+          </div>
+          
+          <div id="reader_ui_signal_div" style="float:left; width:20%">
+         
+          Light mode: 
+          <select id="light_mode">
+          
+          <option value="0"> None</option>
+          <option value="1"> Long Green</option>
+          <option value="2"> Long Red</option>
+          <option value="3"> Alternation</option>
+          <option value="4"> Flash</option>
+          
+          </select>
+          <br><br>
+          Sound mode:
+          <select id="sound_mode">
+          
+          <option value="0"> None</option>
+          <option value="1"> Short</option>
+          <option value="2"> Long</option>
+          <option value="3"> Double short</option>
+          <option value="4"> Triple short</option>
+          <option value="5"> Triplet melody</option>
+          
+          </select>
+          
+         </div>
+          
+          <div id="signal_btn_div" style="float:left; margin: 10px 10px 10px 10px; width:40%">
+            <div id="btnUISignal_div">
+                <button onclick="ReaderUISignal()" id="btnReaderUISignal"> READER UI SIGNAL</button>
+            </div>
+          </div>
+           
+          
+           <hr style="float:left; width:70%">
+           
+           <div style="float:left; width:100%">
+            
+            <div id="auth_check" style="float:left; width:100%">
+            
+            <input id="radio_auth_A_mode" name="radio_auth" style="margin-left:100px" checked="checked" type="radio"> AUTH 1A </input>
+            <input id="radio_auth_B_mode" name="radio_auth" style="margin-left:100px" type="radio"> AUTH 1B </input>
+            </div>
+            
+            <hr style="float:left; width:70%">
+
+
+           </div>
+           
+           
+        <div id="card_key_mode_format" class="tab">
+        
+        <button class="tablinks" onclick="showCardKeys()">New card Keys</button>
+        <button class="tablinks" onclick="showReaderKeys()" >New reader Keys</button>
+        
+        </div>
+        
+        <div id="key_mode_format" style="float:left; width:100%">
+            
+            <div id = "new_card_keys">
+           
+           <div id="card_keys" style="float:left; width:100%;">
+
+                Key A <br> 
+                <input class="card_key_A_input" type="text" value="255"> </input>
+                <input class="card_key_A_input" type="text" value="255"> </input>
+                <input class="card_key_A_input" type="text" value="255"> </input>
+                <input class="card_key_A_input" type="text" value="255"> </input>
+                <input class="card_key_A_input" type="text" value="255"> </input>
+                <input class="card_key_A_input" type="text" value="255"> </input>
+                <br>
+                Key B <br>
+                <input class="card_key_B_input" type="text" value="255"> </input>
+                <input class="card_key_B_input" type="text" value="255"> </input>
+                <input class="card_key_B_input" type="text" value="255"> </input>
+                <input class="card_key_B_input" type="text" value="255"> </input>
+                <input class="card_key_B_input" type="text" value="255"> </input>
+                <input class="card_key_B_input" type="text" value="255"> </input>
+                
+                <br>
+               <input onclick="keysToHex()" type="checkbox" id="ifHexChecked" name="hex" value="Hex">Hex<br>
+            
+           </div>
+            <div style="float:left; margin-top:20px; width:100%" id="card_format">
+            
+                <div style="float:left;" id="format_button>">
+                <button onclick="NewCardKeys()" id="btnFormatCardKeys" style="width:200px; height:50px;"> FORMAT CARD </button>
+                </div>
+                <div style="float:left; margin-left:20px; margin-top:15px;"id="format_info">
+                Sectors formatted: <input style="margin-left:5px" type="text" id="card_sectors_formatted"> </input>
+                </div>
+                
+                 
+
+            </div>
+            <hr style="float:left; width:70%">
+           </div>
+           
+           <div id="new_reader_key" style="float:left;width:100%; display:none">
+           
+            <div id="reader_keys" style="float:left;width:100%;">
+             
+                <input class="reader_key_input" type="text" value="255"> </input>
+                <input class="reader_key_input" type="text" value="255"> </input>
+                <input class="reader_key_input" type="text" value="255"> </input>
+                <input class="reader_key_input" type="text" value="255"> </input>
+                <input class="reader_key_input" type="text" value="255"> </input>
+                <input class="reader_key_input" type="text" value="255"> </input>
+                 <br>
+               <input onclick="ReaderKeysToHex()" type="checkbox" id="reader_ifHexChecked" name="hex" value="Hex">Hex<br>
+            
+            </div>
+            <div style="float:left; margin-top:20px; width:100%" id="reader_card_format">
+            
+                <div style="float:left;" id="reader_format_button>">
+                <button onclick="NewReaderKey()" style="width:200px; height:50px;"> FORMAT CARD KEYS </button>
+                </div>
+                <div style="float:left; margin-left:20px; margin-top:15px;"id="reader_format_info">
+                Key index: <input value="0" style="margin-left:5px" type="text" id="reader_format_key_index"> </input>
+                </div>
+                
+                 <hr style="float:left; width:70%">
+
+               
+           </div>
+           
+           
+           </div>
+           
+           </div>
+            <div id="select_linear_read_write" class="tab">
+        
+                <button class="tablinks" onclick="showLinearRead()">Linear Read</button>
+                <button class="tablinks" onclick="showLinearWrite()">Linear Write</button>
+            
+            </div>
+            
+            
+        <div style="float:left; width:100%" id="Linear_read_wrapper" style="display:block">
+         <div style="float:left; width:100%" id="Linear_read_field">
+        
+        Read Data:
+        
+        <textarea id="linear_read_input" readonly style="float:left; width:100%; height:200px; background-color: #F0F0F0"> </textarea>
+        
+        </div>
+       
+       <div style="float:left; width:10%;" id="linear_read_params"> 
+           Linear Address: <input type="text" id="linear_read_linear_address"> </input> <br>
+           Data length: <input type="text" id="linear_read_linear_length"> </input>
+       </div>
+       <div style="float:left; margin-left:60px; margin-top:50px" id="lin_read_bytes_ret">
+       Read bytes:
+        <input readonly type="text" id="linRead_bytes_read"> </input>
+       </div>
+       
+       <div id="Linear_read_button" style="float:left; width:30%; margin-left:20px; margin-top:40px; display:block">
+       
+       <button id="btnLinearRead" onclick="LinearRead()" style="width:200px; height:50px;">LINEAR READ </button>
+       
+       </div>
+        
+        </div>
+        
+        <div style="float:left; width:100%; display:none" id="Linear_write_wrapper">
+         
+        <div style="float:left; width:100%" id="Linear_write_field">
+        
+        Write Data:
+        
+        <textarea onkeyup="linWriteLengthUpdate(this.value)" id="linear_write_input" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="" style="float:left; width:100%; height:200px; background-color: #F0F0F0"> </textarea>
+        
+        </div>
+        
+       <div style="float:left; width:10%;" id="linear_write_params"> 
+           Linear Address: <input type="text" id="linear_write_linear_address"> </input> <br>
+           Data length: <input type="text" id="linear_write_linear_length"> </input>
+       </div>
+       <div style="float:left; margin-left:60px; margin-top:50px" id="lin_write_bytes_ret">
+       Bytes Written:
+        <input readonly type="text" id="linWrite_bytes_written"> </input>
+       </div>
+       
+       <div id="Linear_write_button" style="float:left; width:30%; margin-left:20px; margin-top:40px; display:block">
+       
+       <button onclick="LinearWrite()" id="btnLinearWrite" style="width:200px; height:50px;">LINEAR WRITE </button>
+       </div>
+        
+        </div>
+        
+        <div style="float:left; width:500px; padding:5px; margin:5px 0px 10px 0px; display:block; border: solid 1px;" id="simple_information">
+            <br>
+          <label style="width: 100%; border-bottom:solid 1px; margin:5px"  id="function_status"> Function status: </label><br>
+          <label style="width: 100%;margin:5px" id="status"> Status: </label>
+          
+        </div>
+       
+          </div>
+          
+          <div id="about" style="display:none; margin-left:10%; padding:1px 16px;height:1000px;"> 
+        
+            <h2>This demo serves as an uFR Simple implementation in browser along with extension and uFR shell.</h2> <br>
+            This example is using following functions: ReaderOpen(), ReaderOpenEx(), LinearRead(), LinearWrite(), LinearFormatCard(), ReaderKeyWrite().
+            For ReaderOpenEx, you'll need to provide suitable arguments such as reader type, port name/interface etc.
+            
+            Upon clicking Reader Open, whether you selected Advanced options or default ones, 
+            it will connect to your reader on success, and display reader type and serial number in given text boxes.
+            <br> Get Card Info will call GetReaderEx() function and display card information such as card type, card UID (card serial field) and UID size.
+            <br> 
+            Rest of functions in this example and their parameters will be explained in following text:
+            <br>
+                <h4> Reader UI Signal </h4>
+             
+                    This function has only two parameters, light mode and sound mode.
+                       <ul>
+                    <li> Light mode is selected from the given drop-down menu, there are four options</li>
+                    <li> Sound mode is selected from the given drop-down menu, there are five options</li>
+                </ul>
+             <h4>  New card and reader key(s)  </h4>  
+              As a demonstration, here we have two functions:<br>
+              For new card keys we'll be using LinearFormatCard() function, but for reader keys we'll use ReaderKeyWrite() function. <br>
+                   
+                <ul>
+                New card keys - LinearFormatCard() parameters:
+                    <ul>
+                    <li> New key A - this parameter is consisted of six fields, in which we input a byte either as decimal or hexadecimal representation</li>
+                    <li> New key B - this parameter is consisted of six fields, in which we input a byte either as decimal or hexadecimal representation </li>
+                    <li> Block access bit will be forwarded as 1</li>
+                    <li> Sector trailer access byte us 1</li>
+                    <li> Sector trailer byte9 will be 45</li>
+                    <li> Key mode for authentication can be either MIFARE_AUTHENT1A or MIFARE_AUTHENT1B, depends on selection from two given radio buttons</li>
+                    <li> Authenticating key will be key 0 from you reader</li>
+                    
+                    </ul>
+                <br> New reader key - ReaderKeyWrite() parameters:
+                        <ul>
+                        <li> New reader key - this parameter is consisted of six fields, in which we input a byte either as decimal or hexadecimal representation</li>    
+                        <li> Key index - should be specified below reader key fields, simply input number you wish in [Key index:] field </li>
+                        </ul>
+               
+                </ul>
+                <h4> Linear Read </h4>
+                        <ul>
+                             <li> Linear address should be specified in [Linear address:] field , that will be starting point of our reading. </li>
+                             <li> Length of data to be read should be specified in [Data length:] field</li>
+                             <li> Key mode for authentication can be either MIFARE_AUTHENT1A or MIFARE_AUTHENT1B, depends on selection from two given radio buttons</li>
+                             <li> Authenticating key will be key 0 from you reader</li>
+                             <li> Bytes read on success will be shown in [Read bytes:] field </li>
+                        </ul>
+                        
+                   <h4> Linear Write: </h4>
+                        <ul>
+                             <li> Data for writing should be entered in text box bellow "Data write" caption </li>
+                             <li> Linear address should be specified in [Linear address:] field , that will be starting point of our reading. </li>
+                             <li> Length of data to be read should be specified in [Data length:] field</li>
+                             <li> Key mode for authentication can be either MIFARE_AUTHENT1A or MIFARE_AUTHENT1B, depends on selection from two given radio buttons</li>
+                             <li> Authenticating key will be key 0 from you reader</li>
+                             <li> Bytes written on success will be shown in [Bytes written:] field </li>
+                        </ul>       
+                
+            Additionally, function status will be displayed on the bottom, along with debug output of these functions in browser console, for example you'll see those when you press F12 in Chrome.
+        
+        </div>
+          
+    </body>
+</html>

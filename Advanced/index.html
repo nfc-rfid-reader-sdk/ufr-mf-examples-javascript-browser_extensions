@@ -1,0 +1,1816 @@
+<!DOCTYPE html>
+<html ufr>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="scripts/helper.js"> </script>
+    <script src="scripts/reader_func.js"> </script>
+    <script src="scripts/linear_read_write.js"> </script>
+    <script src="scripts/block_read_write.js"> </script>
+    <script src="scripts/block_in_sector_read_write.js"> </script>
+    <script src="scripts/value_block_read_write.js"></script>
+    <script src="scripts/value_block_increment_decrement.js"></script>
+    <script src="scripts/value_block_in_sector_read_write.js"></script>
+    <script src="scripts/value_block_in_sector_increment_decrement.js"></script>
+    <script src="scripts/sector_trailer_write.js"> </script>
+    <script src="scripts/linear_format_card.js"></script>
+    <script src="scripts/view_all.js"></script>
+
+
+    <title>uFR Advanced</title>
+</head>
+
+<body>
+    <div class="sidenav">
+        <a onclick="showAbout()">About</a>
+        <a onclick="showHome()">Home</a>
+    </div>
+    <div id="simplest_example_main_div" style="margin-left:10%; padding:1px 16px;height:1000px;">
+        <h2>uFR Advanced</h2>
+        <div id="header">
+            <ul class="dropdown">
+                <li>Functions
+                    <ul>
+                        <li onclick="showLinearReadWriteMenu()">Linear Read/Write</li>
+                        <li onclick="showBlockReadWriteMenu()"> Block Read/Write</li>
+                        <li onclick="showBlockInSectorReadWriteMenu()">BlockInSector Read/Write</li>
+                        <li onclick="showValueBlockReadWriteMenu()">ValueBlock Read/Write</li>
+                        <li onclick="showValueBlockIncrementDecrementMenu()">ValueBlock Increment/Decrement</li>
+                        <li onclick="showValueBlockInSectorReadWriteMenu()">ValueBlockInSector Read/Write</li>
+                        <li onclick="showValueBlockInSectorIncrementDecrementMenu()">ValueBlockInSector
+                            Increment/Decrement</li>
+                        <li onclick="showSectorTrailerWriteMenu()">Sector Trailer Write</li>
+                        <li onclick="showLinearFormatCardMenu()">Linear Format Card</li>
+                        <li onclick="showReaderHWFW()">Reader Hardware/Firmware version</li>
+                    </ul>
+                </li>
+                <li onclick="showViewAll()"> View all </li>
+            </ul>
+        </div>
+
+        <div id="reader_open_param_div>" style="float:left; width:100%">
+            <div id="open_div" style="float:left; width:250px; margin-bottom:10px;">
+                <button id="btnReaderOpen" onclick="ReaderOpen(this)"> READER OPEN</button>
+            </div>
+            <div style="float:left; width:200px" id="get_card_info_div">
+                <button id="btnGetCardIdEx" onclick="GetCardIdEx(this)"> GET CARD INFO</button>
+                <br>
+            </div>
+            <div id="advanced_options" style="width:100%; float:left">
+                &nbsp&nbspAdvanced options
+                <input onclick="AdvancedOption()" id="checkAdvancedOption" type="checkbox"> </input>
+                <br> &nbsp Reader type:&nbsp
+                <input class="adv_option" disabled value="" type="text" id="reader_type" style="width:2%"></input>
+                &nbsp Port name:&nbsp
+                <input class="adv_option" disabled value="" type="text" id="port_name" style="width:7%"></input>
+                &nbsp Port interface:&nbsp
+                <input class="adv_option" disabled value="" type="text" id="port_interface" style="width:2%"></input>
+                &nbsp arg:&nbsp
+                <input disabled class="adv_option" value="" type="text" id="port_additional_arg"
+                    style="width:2%"></input>
+            </div>
+            <hr style="float:left; width:70%">
+        </div>
+        <div id="simple_reader_and_card_info_div" style="float:left;width:100%;height:100px;">
+            <div id="reader_info">
+                Reader Type: &nbsp&nbsp
+                <input readonly type="text" id="reader_info_reader_type"> </input>
+                <br> Reader Serial:&nbsp
+                <input readonly type="text" id="reader_info_reader_serial"> </input>
+                <br>
+            </div>
+            <div id="card_info">
+                Card type:&nbsp&nbsp&nbsp
+                <input readonly id="card_type" type="text"> </input> &nbspUid Size:
+                <input readonly type="text" id="uid_size"> </input>
+                <br> Card Serial:
+                <input readonly type="text" id="card_serial" style="width:60%"> </input>
+            </div>
+            <hr style="float:left; width:70%">
+        </div>
+        <div id="reader_ui_signal_div" style="float:left; width:20%">
+            Light mode: &nbsp&nbsp
+            <select id="light_mode">
+                <option value="0"> None</option>
+                <option value="1"> Long Green</option>
+                <option value="2"> Long Red</option>
+                <option value="3"> Alternation</option>
+                <option value="4"> Flash</option>
+            </select>
+            <br>
+            <br> Sound mode:
+            <select id="sound_mode">
+                <option value="0"> None</option>
+                <option value="1"> Short</option>
+                <option value="2"> Long</option>
+                <option value="3"> Double short</option>
+                <option value="4"> Triple short</option>
+                <option value="5"> Triplet melody</option>
+            </select>
+        </div>
+        <div id="signal_btn_div" style="float:left; margin: 10px 10px 10px 10px; width:70%">
+            <div id="btnUISignal_div" style="float:left; width:150px; margin-left:15px; margin-right:50px">
+                <button onclick="ReaderUISignal()" id="btnReaderUISignal"> Reader UI Signal</button>
+            </div>
+            <div id="btnSoftRestart_div" style="float:left; width:150px; margin-left:15px; margin-right:50px">
+                <button onclick="SoftRestart()" id="btnReaderSoftRestart"> Soft Restart </button>
+            </div>
+            <div id="btnReadeReset_div" style="float:left; width:150px; margin-left:15px; margin-right:50px">
+                <button onclick="ReaderReset()" id="btnReadeReset"> Reader Reset </button>
+            </div>
+        </div>
+
+        <div id="key_and_user_data_write" style="float:left; width:100%">
+            <div class="scrollmenu" style="width:300px">
+                <a onclick="ShowReaderKey()">Reader Key</a>
+                <a onclick="ShowUserData()">Write User Data</a>
+            </div>
+
+        </div>
+        <hr style="float:left; width:70%" ;>
+        <div id="reader_key_write_div" style="float:left; width:100%">
+            <div id="reader_keys" style="float:left;width:100%; display:block">
+
+                <input style="width: 30px;" class="reader_key_input" type="text" value="255"> </input>
+                <input style="width: 30px;" class="reader_key_input" type="text" value="255"> </input>
+                <input style="width: 30px;" class="reader_key_input" type="text" value="255"> </input>
+                <input style="width: 30px;" class="reader_key_input" type="text" value="255"> </input>
+                <input style="width: 30px;" class="reader_key_input" type="text" value="255"> </input>
+                <input style="width: 30px;" class="reader_key_input" type="text" value="255"> </input>
+                <br>
+                <input onclick="ReaderKeysToHex()" type="checkbox" id="reader_ifHexChecked" name="hex" value="Hex">Hex
+                <br>
+
+                <div style="float:left; margin-top:20px; width:100%" id="reader_card_format">
+
+                    <div style="float:left;" id="reader_format_button>">
+                        <button onclick="NewReaderKey()" style="width:200px; height:50px;"> Reader Key Write </button>
+                    </div>
+                    <div style="float:left; margin-left:20px; margin-top:15px;" id="reader_format_info">
+                        Key index:&nbsp
+                        <select id="key_indexes"> </select>
+                        <script>
+                            var select = document.getElementById('key_indexes'); // <!-- populates our key index combobox -->
+                            for (var i = 0; i <= 31; i++) {
+                                select.options[select.options.length] = new Option(i, i);
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+
+            <div id="write_user_data_div" style="float:left; width:100%; display:none;">
+
+                <div id="data" style="float:left; width:300px; text-align:center">
+                    &nbsp &nbsp &nbsp &nbsp &nbsp User data
+                    <input readonly type="text" id="UserData"> </input>
+                    <br>New User Data
+                    <input type="text" id="NewUserData"> </input>
+
+                </div>
+                <div style="float:left; width:300px; margin-top:10px; margin-left:30px" id="btnWriteUserData_div>">
+                    <button onclick="WriteUserData()" style="width:200px; height:50px;"> Write User Data </button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="akm1_banner" style="float:left; width:100%" :>
+            <hr style="float:left; width:70%;">
+
+            <h2 id="currentMenu" style="margin-left:20%; "> Linear Read/Write (AKM1, AKM2, PK)</h2>
+
+            <hr style="float:left; width:70%" ;>
+        </div>
+
+        <div id="auth_check" style="float:left; width:100%">
+            <div id="radio_auth_modes" style="float:left; width:350px; margin-top:10px;">
+                <input id="radio_auth_A_mode" name="radio_auth" style="margin-left:10px" checked="checked" type="radio">
+                AUTH 1A </input>
+                <input id="radio_auth_B_mode" name="radio_auth" style="margin-left:10px" type="radio"> AUTH 1B </input>
+                &nbsp&nbsp&nbspKey index&nbsp
+                <select id="key_auth_indexes"> </select>
+                <script>
+                    var select = document.getElementById('key_auth_indexes'); // <!-- populates our key index combobox -->
+                    for (var i = 0; i < 32; i++) {
+                        select.options[select.options.length] = new Option(i, i);
+                    }
+                </script>
+            </div>
+
+            <div id="pk_key" style="float:left; width:50%;  margin-top:3px;">
+                PK Key&nbsp&nbsp
+                <input style="width: 30px;" class="card_key_PK_input" type="text" value="255"> </input>
+                <input style="width: 30px;" class="card_key_PK_input" type="text" value="255"> </input>
+                <input style="width: 30px;" class="card_key_PK_input" type="text" value="255"> </input>
+                <input style="width: 30px;" class="card_key_PK_input" type="text" value="255"> </input>
+                <input style="width: 30px;" class="card_key_PK_input" type="text" value="255"> </input>
+                <input style="width: 30px;" class="card_key_PK_input" type="text" value="255"> </input>
+            </div>
+        </div>
+        <hr style="float:left; width:70%">
+
+
+        <div id="linear_read_write_wrapper" style="float:left; width:100%; display:block">
+
+
+            <div class="scrollmenu">
+                <a onclick="showLinearRead()">Linear Read</a>
+                <a onclick="showLinearReadOptions()">LinearRead_AKM1/AKM2</a>
+                <a onclick="showLinearReadPK()">LinearRead_PK</a>
+                <a onclick="showLinearWrite()">Linear Write</a>
+                <a onclick="showLinearWriteOptions()">LinearWrite_AKM1/AKM2</a>
+                <a onclick="showLinearWritePK()">LinearWrite_PK</a>
+            </div>
+
+            <!-- LINEAR READ RK -->
+
+            <div style="float:left; width:100%;display:block" id="linear_read_wrapper">
+
+                <div style="float:left; width:100%" id="Linear_read_field">
+
+                    Read Data:
+
+                    <textarea id="linear_read_input" readonly
+                        style="float:left; width:100%; height:200px; background-color: #F0F0F0"> </textarea>
+
+                </div>
+
+                <div style="float:left; width:10%;" id="linear_read_params">
+                    Linear Address:
+                    <input type="text" id="linear_read_linear_address"> </input>
+                    <br> Data length:
+                    <input type="text" id="linear_read_linear_length"> </input>
+                </div>
+                <div style="float:left; margin-left:60px; margin-top:50px" id="lin_read_bytes_ret">
+                    Read bytes:
+                    <input readonly type="text" id="linRead_bytes_read"> </input>
+                </div>
+
+                <div id="Linear_read_button"
+                    style="float:left; width:30%; margin-left:20px; margin-top:40px; display:block">
+
+                    <button id="btnLinearRead" onclick="LinearRead()" style="width:200px; height:50px;">LINEAR READ
+                    </button>
+
+                </div>
+
+            </div>
+            <!-- linear_read_akm1_akm2_wrapper -->
+
+            <div style="float:left; width:100%; display:block">
+                <!-- Linear Read AKM1/AKM2 -->
+                <div style="float:left;width:100%; display:none;" id="linear_read_akm_options">
+                    <div class="scrollmenu" style="background-color: #dddddd;">
+                        <a onclick="showLinearReadAKM1()">LinearRead_AKM1</a>
+                        <a onclick="showLinearReadAKM2()">LinearRead_AKM2</a>
+                    </div>
+                </div>
+
+                <div style="float:left;width:100%;display:none;" id="linear_read_akm1">
+                    <!-- READ AKM1 -->
+
+                    <div style="float:left; width:100%" id="Linear_read_akm1_field">
+
+                        Read Data:
+
+                        <textarea id="linear_read_akm1_input" readonly
+                            style="float:left; width:100%; height:200px; background-color: #F0F0F0"> </textarea>
+
+                    </div>
+
+                    <div style="float:left; width:10%;" id="linear_read_akm1_params">
+                        Linear Address:
+                        <input type="text" id="linear_read_akm1_linear_address"> </input>
+                        <br> Data length:
+                        <input type="text" id="linear_read_akm1_linear_length"> </input>
+                    </div>
+                    <div style="float:left; margin-left:60px; margin-top:50px" id="lin_read_akm1_bytes_ret">
+                        Read bytes:
+                        <input readonly type="text" id="linRead_bytes_read_akm1"> </input>
+                    </div>
+
+                    <div id="Linear_read_akm1_button"
+                        style="float:left; width:30%; margin-left:20px; margin-top:40px; display:block">
+
+                        <button id="btnLinearRead_akm1" onclick="LinearReadAKM1()"
+                            style="width:200px; height:50px;">LINEAR READ AKM1 </button>
+
+                    </div>
+
+                </div>
+                <div style="float:left;width:100%;display:none;" id="linear_read_akm2">
+                    <!-- READ AKM2 -->
+
+                    <div style="float:left; width:100%" id="Linear_read_akm2_field">
+
+                        Read Data:
+
+                        <textarea id="linear_read_akm2_input" readonly
+                            style="float:left; width:100%; height:200px; background-color: #F0F0F0"> </textarea>
+
+                    </div>
+
+                    <div style="float:left; width:10%;" id="linear_read_akm2_params">
+                        Linear Address:
+                        <input type="text" id="linear_read_akm2_linear_address"> </input>
+                        <br> Data length:
+                        <input type="text" id="linear_read_akm2_linear_length"> </input>
+                    </div>
+                    <div style="float:left; margin-left:60px; margin-top:50px" id="lin_read_akm2_bytes_ret">
+                        Read bytes:
+                        <input readonly type="text" id="linRead_bytes_read_akm2"> </input>
+                    </div>
+
+                    <div id="Linear_read_akm2_button"
+                        style="float:left; width:30%; margin-left:20px; margin-top:40px; display:block">
+
+                        <button id="btnLinearRead_akm2" onclick="LinearReadAKM2()"
+                            style="width:200px; height:50px;">LINEAR READ AKM2 </button>
+
+                    </div>
+
+                </div>
+
+                <div style="float:left;width:100%; display:none;" id="linear_read_PK">
+                    <!-- READ PK -->
+
+                    <div style="float:left; width:100%" id="Linear_read_PK_field">
+
+                        Read Data:
+
+                        <textarea id="linear_read_PK_input" readonly
+                            style="float:left; width:100%; height:200px; background-color: #F0F0F0"> </textarea>
+
+                    </div>
+
+                    <div style="float:left; width:10%;" id="linear_read_PK_params">
+                        Linear Address:
+                        <input type="text" id="linear_read_PK_linear_address"> </input>
+                        <br> Data length:
+                        <input type="text" id="linear_read_PK_linear_length"> </input>
+                    </div>
+                    <div style="float:left; margin-left:60px; margin-top:50px" id="lin_read_PK_bytes_ret">
+                        Read bytes:
+                        <input readonly type="text" id="linRead_bytes_read_PK"> </input>
+                    </div>
+
+                    <div id="Linear_read_PK_button"
+                        style="float:left; width:30%; margin-left:20px; margin-top:40px; display:block">
+
+                        <button id="btnLinearRead_PK" onclick="LinearReadPK()" style="width:200px; height:50px;">LINEAR
+                            READ PK </button>
+
+                    </div>
+
+                </div>
+
+                <!-- !!!!!!!!!! LINEAR WRITE !!!!!!!!! -->
+
+                <div style="float:left; width:100%; display:none" id="linear_write_wrapper">
+
+                    <div style="float:left; width:100%" id="Linear_write_field">
+
+                        Write Data:
+
+                        <textarea onkeyup="linWriteLengthUpdate(this.value)" id="linear_write_input"
+                            pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value=""
+                            style="float:left; width:100%; height:200px; background-color: #F0F0F0"> </textarea>
+
+                    </div>
+
+                    <div style="float:left; width:10%;" id="linear_write_params">
+                        Linear Address:
+                        <input type="text" id="linear_write_linear_address"> </input>
+                        <br> Data length:
+                        <input type="text" id="linear_write_linear_length"> </input>
+                    </div>
+                    <div style="float:left; margin-left:60px; margin-top:50px" id="lin_write_bytes_ret">
+                        Bytes Written:
+                        <input readonly type="text" id="linWrite_bytes_written"> </input>
+                    </div>
+
+                    <div id="Linear_write_button"
+                        style="float:left; width:30%; margin-left:20px; margin-top:40px; display:block">
+
+                        <button onclick="LinearWrite()" id="btnLinearWrite" style="width:200px; height:50px;">LINEAR
+                            WRITE </button>
+                    </div>
+
+                </div>
+
+                <!-- WRITE OPTIONS -->
+
+                <div style="float:left;width:100%; display:none;" id="linear_write_akm_options">
+                    <div class="scrollmenu" style="background-color: #dddddd;">
+                        <a onclick="showLinearWriteAKM1()">LinearWrite_AKM1</a>
+                        <a onclick="showLinearWriteAKM2()">LinearWrite_AKM2</a>
+                    </div>
+                </div>
+
+                <!-- -->
+
+                <div style="float:left; width:100%; display:none" id="linear_write_akm1">
+                    <!-- WRITE AKM1 -->
+                    <div style="float:left; width:100%" id="Linear_write_akm1_field">
+
+                        Write Data:
+
+                        <textarea onkeyup="linWriteAKM1LengthUpdate(this.value)" id="linear_write_akm1_input"
+                            pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value=""
+                            style="float:left; width:100%; height:200px; background-color: #F0F0F0"> </textarea>
+
+                    </div>
+
+                    <div style="float:left; width:10%;" id="linear_write_akm1_params">
+                        Linear Address:
+                        <input type="text" id="linear_write_linear_akm1_address"> </input>
+                        <br> Data length:
+                        <input type="text" id="linear_write_linear_akm1_length"> </input>
+                    </div>
+                    <div style="float:left; margin-left:60px; margin-top:50px" id="lin_write_akm1_bytes_ret">
+                        Bytes Written:
+                        <input readonly type="text" id="linWrite_akm1_bytes_written"> </input>
+                    </div>
+
+                    <div id="Linear_write_akm1_button"
+                        style="float:left; width:30%; margin-left:20px; margin-top:40px; display:block">
+
+                        <button onclick="LinearWriteAKM1()" id="btnLinearWrite_akm1"
+                            style="width:200px; height:50px;">LINEAR WRITE AKM1 </button>
+                    </div>
+
+                </div>
+
+                <div style="float:left; width:100%; display:none" id="linear_write_akm2">
+                    <!-- WRITE AKM2 -->
+                    <div style="float:left; width:100%" id="Linear_write_akm2_field">
+
+                        Write Data:
+
+                        <textarea onkeyup="linWriteAKM2LengthUpdate(this.value)" id="linear_write_akm2_input"
+                            pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value=""
+                            style="float:left; width:100%; height:200px; background-color: #F0F0F0"> </textarea>
+
+                    </div>
+
+                    <div style="float:left; width:10%;" id="linear_write_akm2_params">
+                        Linear Address:
+                        <input type="text" id="linear_write_linear_akm2_address"> </input>
+                        <br> Data length:
+                        <input type="text" id="linear_write_linear_akm2_length"> </input>
+                    </div>
+                    <div style="float:left; margin-left:60px; margin-top:50px" id="lin_write_akm2_bytes_ret">
+                        Bytes Written:
+                        <input readonly type="text" id="linWrite_akm2_bytes_written"> </input>
+                    </div>
+
+                    <div id="Linear_write_akm2_button"
+                        style="float:left; width:30%; margin-left:20px; margin-top:40px; display:block">
+
+                        <button onclick="LinearWriteAKM2()" id="btnLinearWrite_akm2"
+                            style="width:200px; height:50px;">LINEAR WRITE AKM2 </button>
+                    </div>
+
+                </div>
+
+                <div style="float:left; width:100%; display:none" id="linear_write_PK">
+                    <!-- WRITE PK -->
+                    <div style="float:left; width:100%" id="Linear_write_PK_field">
+
+                        Write Data:
+
+                        <textarea onkeyup="linWritePKLengthUpdate(this.value)" id="linear_write_PK_input"
+                            pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value=""
+                            style="float:left; width:100%; height:200px; background-color: #F0F0F0"> </textarea>
+
+                    </div>
+
+                    <div style="float:left; width:10%;" id="linear_write_PK_params">
+                        Linear Address:
+                        <input type="text" id="linear_write_linear_PK_address"> </input>
+                        <br> Data length:
+                        <input type="text" id="linear_write_linear_PK_length"> </input>
+                    </div>
+                    <div style="float:left; margin-left:60px; margin-top:50px" id="lin_write_PK_bytes_ret">
+                        Bytes Written:
+                        <input readonly type="text" id="linWrite_PK_bytes_written"> </input>
+                    </div>
+
+                    <div id="Linear_write_PK_button"
+                        style="float:left; width:30%; margin-left:20px; margin-top:40px; display:block">
+
+                        <button onclick="LinearWritePK()" id="btnLinearWrite_PK"
+                            style="width:200px; height:50px;">LINEAR WRITE PK</button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div> <!-- END OF LINEAR READ/WRITE WRAPPER -->
+
+
+        <div id="block_read_write_wrapper" style="float:left; width:100%; display:none">
+
+            <!-- BLOCK READ/WRITE WRAPPER -->
+
+            <div class="scrollmenu" style="background-color: #dddddd; width:250px;">
+                <a onclick="showBlockRead()">Block Read</a>
+                <a onclick="showBlockWrite()">Block Write</a>
+            </div>
+            <div id="block_read_wrapper" style="float:left; width:100%; display:block; ">
+                <!-- BLOCK READ WRAPPER -->
+
+                <div id="block_read_rk_and_akm1" style="float:left;width:100%; margin-top: 10px">
+
+                    <div id="block_read_rk" class="subfunction">
+                        <h4 class="subfunction_header"> Block Read </h4>
+
+                        Block address: <input id="block_read_block_address_rk" type="text" style="width:30px"> </input>
+                        <button onclick="BlockRead_RK()"> READ </button><br>
+                        Hex<input id="isBlockReadHexChecked" onclick="" type="checkbox"> </input>
+                        Read data: <input readonly id="BlockReadRK_data_input" type="text" style="width:275px"> </input>
+                    </div>
+
+                    <div id="block_read_akm1" class="subfunction">
+
+                        <h4 class="subfunction_header"> Block Read_AKM1 </h4>
+                        Block address: <input id="block_read_block_address_akm1" type="text" style="width:30px">
+                        </input>
+                        <button onclick="BlockRead_AKM1()"> READ </button><br>
+                        Hex<input id="isBlockReadAKM1HexChecked" onclick="" type="checkbox"> </input>
+                        Read data: <input readonly id="BlockReadAKM1_data_input" type="text" style="width:275px">
+                        </input>
+                    </div>
+
+                </div>
+
+                <div id="block_read_akm2_and_PK" style="float:left; width:100%">
+
+                    <div id="block_read_akm2" class="subfunction">
+
+                        <h4 class="subfunction_header"> Block Read_AKM2 </h4>
+                        Block address: <input id="block_read_block_address_akm2" type="text" style="width:30px">
+                        </input>
+                        <button onclick="BlockRead_AKM2()"> READ </button><br>
+                        Hex<input id="isBlockReadAKM2HexChecked" onclick="" type="checkbox"> </input>
+                        Read data: <input readonly id="BlockReadAKM2_data_input" type="text" style="width:275px">
+                        </input>
+                    </div>
+
+                    <div id="block_read_PK" class="subfunction">
+
+                        <h4 class="subfunction_header"> Block Read_PK </h4>
+                        Block address: <input id="block_read_block_address_PK" type="text" style="width:30px"> </input>
+                        <button onclick="BlockRead_PK()"> READ </button><br>
+                        Hex<input id="isBlockReadPKHexChecked" onclick="" type="checkbox"> </input>
+                        Read data: <input readonly id="BlockReadPK_data_input" type="text" style="width:275px"> </input>
+                    </div>
+                </div>
+
+            </div> <!-- END OF BLOCK READ WRAPPER -->
+
+
+            <div id="block_write_wrapper" style="float:left; width:100%; display:none;">
+                <!-- BLOCK WRITE WRAPPER -->
+
+                <div id="block_write_rk_and_akm1" style="float:left;width:100%; margin-top: 10px;">
+
+                    <div id="block_write_rk" class="subfunction">
+                        <h4 class="subfunction_header"> Block Write </h4>
+
+                        Block address: <input id="block_write_block_address_rk" type="text" style="width:30px"> </input>
+                        <button onclick="BlockWrite_RK()"> WRITE </button><br>
+                        Hex<input id="isBlockWriteHexChecked" onclick="" type="checkbox"> </input>
+                        Write data: <input id="BlockWriteRK_data_input" type="text" style="width:275px"> </input>
+                    </div>
+
+
+                    <div id="block_write_akm1" class="subfunction">
+                        <h4 class="subfunction_header"> BlockWrite_AKM1</h4>
+
+                        Block address: <input id="block_write_block_address_akm1" type="text" style="width:30px">
+                        </input>
+                        <button onclick="BlockWrite_AKM1()"> WRITE </button><br>
+                        Hex<input id="isBlockWriteAKM1HexChecked" onclick="" type="checkbox"> </input>
+                        Write data: <input id="BlockWriteAKM1_data_input" type="text" style="width:275px"> </input>
+                    </div>
+
+                </div>
+
+                <div id="block_write_akm2_and_PK" style="float:left; width:100%">
+
+                    <div id="block_write_akm2" class="subfunction">
+                        <h4 class="subfunction_header"> BlockWrite_AKM2</h4>
+
+                        Block address: <input id="block_write_block_address_akm2" type="text" style="width:30px">
+                        </input>
+                        <button onclick="BlockWrite_AKM2()"> WRITE </button><br>
+                        Hex<input id="isBlockWriteAKM2HexChecked" onclick="" type="checkbox"> </input>
+                        Write data: <input id="BlockWriteAKM2_data_input" type="text" style="width:275px"> </input>
+                    </div>
+
+                    <div id="block_write_PK" class="subfunction">
+                        <h4 class="subfunction_header"> BlockWrite_PK</h4>
+
+                        Block address: <input id="block_write_block_address_PK" type="text" style="width:30px"> </input>
+                        <button onclick="BlockWrite_PK()"> WRITE </button><br>
+                        Hex<input id="isBlockWritePKHexChecked" onclick="" type="checkbox"> </input>
+                        Write data: <input id="BlockWritePK_data_input" type="text" style="width:275px"> </input>
+                    </div>
+                </div>
+
+            </div> <!-- END OF BLOCK WRITE WRAPPER -->
+
+        </div> <!-- END OF BLOCK READ/WRITE WRAPPER -->
+
+        <div id="block_in_sector_read_write_wrapper" style="float:left; width:100%; display:none">
+
+            <!-- BLOCK IN SECTOR READ/WRITE WRAPPER -->
+
+            <div class="scrollmenu" style="background-color: #dddddd; width:350px;">
+                <a onclick="showBlockInSectorRead()">BlockInSector Read</a>
+                <a onclick="showBlockInSectorWrite()">BlockInSector Write</a>
+            </div>
+            <div id="block_in_sector_read_wrapper" style="float:left; width:100%; display:block;">
+                <!-- BLOCK IN SECTOR  READ WRAPPER -->
+
+                <div id="block_in_sector_read_rk_and_akm1" style="float:left;width:100%; margin-top: 10px;">
+
+                    <div id="block_in_sector_read_rk" class="subfunction">
+                        <h4 class="subfunction_header"> BlockInSector Read </h4>
+                        Sector address: <input id="block_in_sector_read_sector_address_rk" type="text"
+                            style="width:30px"> </input>
+                        Block address: <input id="block_in_sector_read_block_address_rk" type="text" style="width:30px">
+                        </input>
+                        <button onclick="BlockInSectorRead_RK()"> READ </button><br>
+                        Hex<input id="isBlockInSectorReadHexChecked" onclick="" type="checkbox"> </input>
+                        Read data: <input readonly id="BlockInSectorReadRK_data_input" type="text" style="width:275px">
+                        </input>
+                    </div>
+
+                    <div id="block_in_sector_read_akm1" class="subfunction">
+                        <h4 class="subfunction_header"> BlockInSectorRead_AKM1 </h4>
+                        Sector address: <input id="block_in_sector_read_sector_address_akm1" type="text"
+                            style="width:30px"> </input>
+                        Block address: <input id="block_in_sector_read_block_address_akm1" type="text"
+                            style="width:30px"> </input>
+                        <button onclick="BlockInSectorRead_AKM1()"> READ </button><br>
+                        Hex<input id="isBlockInSectorReadAKM1HexChecked" onclick="" type="checkbox"> </input>
+                        Read data: <input readonly id="BlockInSectorReadAKM1_data_input" type="text"
+                            style="width:275px"> </input>
+                    </div>
+
+                </div>
+
+                <div id="block_in_sector_read_akm2_and_PK" style="float:left; width:100%">
+
+                    <div id="block_in_sector_read_akm2" class="subfunction">
+                        <h4 class="subfunction_header"> BlockInSectorRead_AKM2 </h4>
+                        Sector address: <input id="block_in_sector_read_sector_address_akm2" type="text"
+                            style="width:30px"> </input>
+                        Block address: <input id="block_in_sector_read_block_address_akm2" type="text"
+                            style="width:30px"> </input>
+                        <button onclick="BlockInSectorRead_AKM2()"> READ </button><br>
+                        Hex<input id="isBlockInSectorReadAKM2HexChecked" onclick="" type="checkbox"> </input>
+                        Read data: <input readonly id="BlockInSectorReadAKM2_data_input" type="text"
+                            style="width:275px"> </input>
+                    </div>
+
+                    <div id="block_in_sector_read_PK" class="subfunction">
+                        <h4 class="subfunction_header"> BlockInSectorRead_PK </h4>
+                        Sector address: <input id="block_in_sector_read_sector_address_PK" type="text"
+                            style="width:30px"> </input>
+                        Block address: <input id="block_in_sector_read_block_address_PK" type="text" style="width:30px">
+                        </input>
+                        <button onclick="BlockInSectorRead_PK()"> READ </button> <br>
+                        Hex <input id="isBlockInSectorReadPKHexChecked" onclick="" type="checkbox"> </input>
+                        Read data: <input readonly id="BlockInSectorReadPK_data_input" type="text" style="width:275px">
+                        </input>
+                    </div>
+                </div>
+
+            </div> <!-- END OF BLOCK IN SECTOR READ WRAPPER -->
+
+            <div id="block_in_sector_write_wrapper" style="float:left; width:100%; display:none;">
+                <!-- BLOCK IN SECTOR WRITE WRAPPER -->
+
+                <div id="block_in_sector_write_rk_and_akm1" style="float:left;width:100%; margin-top: 10px;">
+
+                    <div id="block_in_sector_write_rk" class="subfunction">
+                        <h4 class="subfunction_header"> BlockInSector Write</h4>
+                        Sector address: <input id="block_in_sector_write_sector_address_rk" type="text"
+                            style="width:30px"> </input>
+                        Block address: <input id="block_in_sector_write_block_address_rk" type="text"
+                            style="width:30px"> </input>
+                        <button onclick="BlockInSectorWrite_RK()"> WRITE </button> <br>
+                        Hex <input id="isBlockInSectorWriteHexChecked" onclick="" type="checkbox"> </input>
+                        Write data: <input id="BlockInSectorWriteRK_data_input" type="text" style="width:275px">
+                        </input>
+                    </div>
+
+                    <div id="block_in_sector_write_akm1" class="subfunction">
+                        <h4 class="subfunction_header"> BlockInSectorWrite_AKM1</h4>
+                        Sector address: <input id="block_in_sector_write_sector_address_akm1" type="text"
+                            style="width:30px"> </input>
+                        Block address: <input id="block_in_sector_write_block_address_akm1" type="text"
+                            style="width:30px"> </input>
+                        <button onclick="BlockInSectorWrite_AKM1()"> WRITE </button> <br>
+                        Hex <input id="isBlockInSectorWriteAKM1HexChecked" onclick="" type="checkbox"> </input>
+                        Write data: <input id="BlockInSectorWriteAKM1_data_input" type="text" style="width:275px">
+                        </input>
+                    </div>
+
+                </div>
+
+                <div id="block_in_sector_write_akm2_and_PK" style="float:left; width:100%">
+
+                    <div id="block_in_sector_write_akm2" class="subfunction">
+                        <h4 class="subfunction_header"> BlockInSectorWrite_AKM2</h4>
+                        Sector address: <input id="block_in_sector_write_sector_address_akm2" type="text"
+                            style="width:30px"> </input>
+                        Block address: <input id="block_in_sector_write_block_address_akm2" type="text"
+                            style="width:30px"> </input>
+                        <button onclick="BlockInSectorWrite_AKM2()"> WRITE </button> <br>
+                        Hex <input id="isBlockInSectorWriteAKM2HexChecked" onclick="" type="checkbox"> </input>
+                        Write data: <input id="BlockInSectorWriteAKM2_data_input" type="text" style="width:275px">
+                        </input>
+                    </div>
+
+                    <div id="block_in_sector_write_PK" class="subfunction">
+                        <h4 class="subfunction_header"> BlockInSectorWrite_PK</h4>
+                        Sector address: <input id="block_in_sector_write_sector_address_PK" type="text"
+                            style="width:30px"> </input>
+                        Block address: <input id="block_in_sector_write_block_address_PK" type="text"
+                            style="width:30px"> </input>
+                        <button onclick="BlockInSectorWrite_PK()"> WRITE </button> <br>
+                        Hex <input id="isBlockInSectorWritePKHexChecked" onclick="" type="checkbox"> </input>
+                        Write data: <input type="text" id="BlockInSectorWritePK_data_input" type="text" style="width:275px">
+                        </input>
+                    </div>
+                </div>
+
+            </div> <!-- END OF BLOCK IN SECTOR WRITE WRAPPER -->
+
+        </div> <!-- END OF BLOCK IN SECTOR READ/WRITE WRAPPER -->
+
+
+        <div id="value_block_read_write_wrapper" style="float:left; width:100%; display:none">
+
+            <!-- VALUE BLOCK READ/WRITE WRAPPER -->
+
+            <div class="scrollmenu" style="background-color: #dddddd; width:350px;">
+                <a onclick="showValueBlockRead()">ValueBlock Read</a>
+                <a onclick="showValueBlockWrite()">ValueBlock Write</a>
+            </div>
+            <div id="value_block_read_wrapper" style="float:left; width:100%; display:block;">
+                <!-- VALUE BLOCK READ WRAPPER -->
+
+                <div id="value_block_read_rk_and_akm1" style="float:left;width:100%;margin-top:10px;">
+
+                    <div id="value_block_read_rk" class="subfunction">
+                        <h4 class="subfunction_header"> ValueBlock Read </h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Block address:<input type="text" id="value_block_read_block_address" style="width:30px"> </input>
+                            <button  onclick="ValueBlockRead_RK()" style="margin-left:30px; width:40%; height:50px"> READ </button>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px; text-align:left">
+                            Read Value:<input type="text" readonly id="value_block_read_value" style="width:100px"> </input>
+                            Value address:<input type="text" readonly id="value_block_read_value_address" style="width:30px"> </input>
+                        </div>
+                    </div>
+
+                    <div id="value_block_read_akm1" class="subfunction">
+                        <h4 class="subfunction_header"> ValueBlock_AKM1 Read </h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Block address:<input type="text" id="value_block_read_block_address_akm1" style="width:30px"> </input>
+                            <button onclick="ValueBlockRead_AKM1()" style="margin-left:30px; width:40%; height:50px"> READ </button>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px; text-align:left">
+                            Read Value:<input type="text" readonly id="value_block_read_value_akm1" style="width:100px"> </input>
+                            Value address:<input type="text" readonly id="value_block_read_value_address_akm1" style="width:30px"> </input>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="value_block_read_akm2_and_PK" style="float:left; width:100%">
+
+                    <div id="value_block_read_akm2" class="subfunction">
+                        <h4 class="subfunction_header"> ValueBlock_AKM2 Read </h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Block address:<input type="text" id="value_block_read_block_address_akm2" style="width:30px"> </input>
+                            <button onclick="ValueBlockRead_AKM2()" style="margin-left:30px; width:40%; height:50px"> READ </button>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px; text-align:left">
+                            Read Value:<input type="text" readonly id="value_block_read_value_akm2" style="width:100px"> </input>
+                            Value address:<input type="text" readonly id="value_block_read_value_address_akm2" style="width:30px"> </input>
+                        </div>
+                    </div>
+
+                    <div id="value_block_read_PK" class="subfunction">
+                        <h4 class="subfunction_header"> ValueBlock_PK Read </h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Block address:<input type="text" id="value_block_read_block_address_PK" style="width:30px"> </input>
+                            <button onclick="ValueBlockRead_PK()" style="margin-left:30px; width:40%; height:50px"> READ </button>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px; text-align:left">
+                            Read Value:<input type="text" readonly id="value_block_read_value_PK" style="width:100px"> </input>
+                            Value address:<input type="text" readonly id="value_block_read_value_address_PK" style="width:30px"> </input>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- END OF BLOCK READ WRAPPER -->
+
+            <div id="value_block_write_wrapper" style="float:left; width:100%; display:none;">
+                <!-- VALUE BLOCK WRITE WRAPPER -->
+
+                <div id="value_block_write_rk_and_akm1" style="float:left;width:100%; margin-top:10px">
+
+                    <div id="value_block_write_rk" class="subfunction">
+                        <h4 class="subfunction_header"> ValueBlock Write </h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Write Value <input type="text" id="value_block_write_value" style="width:100px"> </input>
+                            <button onclick="ValueBlockWrite_RK()" style="width:40%; margin-left:20px"> WRITE </button>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                        Value address <input type="text" id="value_block_write_value_address" style="width:30px"> </input>
+                        Block address <input type="text" id="value_block_write_block_address" style="width:30px"> </input>
+                        </div>
+                       
+                    </div>
+
+                    <div id="value_block_write_akm1" class="subfunction">
+                        <h4 class="subfunction_header"> ValueBlock_AKM1 Write </h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Write Value <input type="text" id="value_block_write_value_akm1" style="width:100px"> </input>
+                            <button onclick="ValueBlockWrite_AKM1()" style="width:40%; margin-left:20px"> WRITE </button>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                        Value address <input type="text" id="value_block_write_value_address_akm1" style="width:30px"> </input>
+                        Block address <input type="text" id="value_block_write_block_address_akm1" style="width:30px;"> </input>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="value_block_write_akm2_and_PK" style="float:left; width:100%">
+
+                    <div id="value_block_write_akm2" class="subfunction">
+                        <h4 class="subfunction_header"> ValueBlock_AKM2 Write </h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Write Value <input type="text" id="value_block_write_value_akm2" style="width:100px"> </input>
+                            <button onclick="ValueBlockWrite_AKM2()" style="width:40%; margin-left:20px"> WRITE </button>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                        Value address <input type="text" id="value_block_write_value_address_akm2" style="width:30px"> </input>
+                        Block address <input type="text" id="value_block_write_block_address_akm2" style="width:30px"> </input>
+                        </div>
+                    </div>
+
+                    <div id="value_block_write_PK" class="subfunction">
+                        <h4 class="subfunction_header"> ValueBlock_PK Write </h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Write Value <input type="text" id="value_block_write_value_PK" style="width:100px"> </input>
+                            <button onclick="ValueBlockWrite_PK()" style="width:40%; margin-left:20px"> WRITE </button>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                        Value address <input type="text" type="text" id="value_block_write_value_address_PK" style="width:30px"> </input>
+                        Block address <input type="text" type="text" id="value_block_write_block_address_PK" style="width:30px"> </input>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- END OF VALUE BLOCK WRITE WRAPPER -->
+
+        </div> <!-- END OF VALUE BLOCK READ/WRITE WRAPPER -->
+
+
+        <div id="value_block_increment_decrement_wrapper" style="float:left; width:100%; display:none">
+
+            <!-- VALUE BLOCK INCREMENT/DECREMENT WRAPPER -->
+
+            <div class="scrollmenu" style="background-color: #dddddd; width:400px;">
+                <a onclick="showValueBlockIncrement()">ValueBlock Increment</a>
+                <a onclick="showValueBlockDecrement()">ValueBlock Decrement</a>
+            </div>
+            <div id="value_block_increment_wrapper" style="float:left; width:100%; display:block;">
+                <!-- VALUE BLOCK INCREMENT WRAPPER -->
+
+                <div id="value_block_increment_rk_and_akm1" style="float:left;width:100%; margin-top:10px">
+
+                    <div id="value_block_increment_rk" class="subfunction">
+                        <h4 class="subfunction_header">ValueBlock Increment</h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Increment Value <input type="text" id="value_block_increment_value" style="width:100px"> </input>
+                            <button onclick="ValueBlockIncrement_RK()" style="width:40%; margin-left:20px"> INCREMENT </button>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">                        
+                        Block address <input type="text" id="value_block_increment_block_address" style="width:30px"> </input>
+                        </div>
+                    </div>
+
+                    <div id="value_block_increment_akm1" class="subfunction">
+                        <h4 class="subfunction_header">ValueBlockIncrement_AKM1</h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Increment Value <input type="text" id="value_block_increment_value_akm1" style="width:100px"> </input>
+                            <button onclick="ValueBlockIncrement_AKM1()" style="width:40%; margin-left:20px"> INCREMENT </button>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">                        
+                        Block address <input type="text" id="value_block_increment_block_address_akm1" style="width:30px"> </input>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="value_block_increment_akm2_and_PK" style="float:left; width:100%">
+
+                    <div id="value_block_increment_akm2" class="subfunction">
+                        <h4 class="subfunction_header">ValueBlockIncrement_AKM2</h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Increment Value <input type="text" id="value_block_increment_value_akm2" style="width:100px"> </input>
+                            <button onclick="ValueBlockIncrement_AKM2()" style="width:40%; margin-left:20px"> INCREMENT </button>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">                        
+                        Block address <input type="text" id="value_block_increment_block_address_akm2" style="width:30px"> </input>
+                        </div>
+                    </div>
+
+                    <div id="value_block_increment_PK" class="subfunction">
+                        <h4 class="subfunction_header">ValueBlockIncrement_PK</h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Increment Value <input type="text" id="value_block_increment_value_PK" style="width:100px"> </input>
+                            <button onclick="ValueBlockIncrement_PK()" style="width:40%; margin-left:20px"> INCREMENT </button>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">                        
+                        Block address <input type="text" id="value_block_increment_block_address_PK" style="width:30px"> </input>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- END OF BLOCK INCREMENT WRAPPER -->
+
+            <div id="value_block_decrement_wrapper" style="float:left; width:100%; display:none;">
+                <!-- VALUE BLOCK DECREMENT WRAPPER -->
+
+                <div id="value_block_decrement_rk_and_akm1" style="float:left;width:100%">
+
+                    <div id="value_block_decrement_rk" class="subfunction">
+                        <h4 class="subfunction_header">ValueBlock Decrement</h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Decrement Value <input type="text" id="value_block_decrement_value" style="width:100px"> </input>
+                            <button onclick="ValueBlockDecrement_RK()" style="width:40%; margin-left:20px"> DECREMENT </button>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">                        
+                        Block address <input type="text" id="value_block_decrement_block_address" style="width:30px"> </input>
+                        </div>
+                    </div>
+
+                    <div id="value_block_decrement_akm1" class="subfunction">
+                        <h4 class="subfunction_header">ValueBlockDecrement_AKM1</h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Decrement Value <input type="text" id="value_block_decrement_value_akm1" style="width:100px"> </input>
+                            <button onclick="ValueBlockDecrement_AKM1()" style="width:40%; margin-left:20px"> DECREMENT </button>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">                        
+                        Block address <input type="text" id="value_block_decrement_block_address_akm1" style="width:30px"> </input>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="value_block_write_decrement_akm2_and_PK" style="float:left; width:100%">
+
+                    <div id="value_block_decrement_akm2" class="subfunction">
+                        <h4 class="subfunction_header">ValueBlockDecrement_AKM2</h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Decrement Value <input type="text" type="text" id="value_block_decrement_value_akm2" style="width:100px"> </input>
+                            <button onclick="ValueBlockDecrement_AKM2()" style="width:40%; margin-left:20px"> DECREMENT </button>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">                        
+                        Block address <input id="value_block_decrement_block_address_akm2" style="width:30px"> </input>
+                        </div>
+                    </div>
+
+                    <div id="value_block_decrement_PK" class="subfunction">
+                        <h4 class="subfunction_header">ValueBlockDecrement_PK</h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Decrement Value <input type="text" id="value_block_decrement_value_PK" style="width:100px"> </input>
+                            <button onclick="ValueBlockDecrement_PK()" style="width:40%; margin-left:20px"> DECREMENT </button>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">                        
+                        Block address <input type="text" id="value_block_decrement_block_address_PK" style="width:30px"> </input>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- END OF VALUE BLOCK DECREMENT WRAPPER -->
+
+        </div> <!-- END OF VALUE BLOCK INCREMENT/DECREMENT WRAPPER -->
+
+        <div id="value_block_in_sector_read_write_wrapper" style="float:left; width:100%; display:none">
+
+            <!-- VALUE BLOCK IN SECTOR READ/WRITE WRAPPER -->
+
+            <div class="scrollmenu" style="background-color: #dddddd; width:450px;">
+                <a onclick="showValueBlockInSectorRead()">ValueBlockInSector Read</a>
+                <a onclick="showValueBlockInSectorWrite()">ValueBlockInSector Write</a>
+            </div>
+            <div id="value_block_in_sector_read_wrapper" style="float:left; width:100%; display:block;">
+                <!-- VALUE BLOCK IN SECTOR READ WRAPPER -->
+
+                <div id="value_block_in_sector_read_rk_and_akm1" style="float:left;width:100%">
+
+                    <div id="value_block_in_sector_read_rk" class="subfunction">
+                        <h4 class="subfunction_header"> ValueBlockInSector Read </h4>
+                    <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                        Sector address: <input id="value_block_in_sector_read_sector_address" type="text" style="width:30px"> </input><br>
+                        Block address:&nbsp &nbsp<input id="value_block_in_sector_read_block_address" type="text" style="width:30px">
+                        </input>
+                        <button style="margin-left:50px; width:200px" onclick="ValueBlockInSectorRead_RK()"> READ </button><br>
+                    </div>
+                    <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                        Read data: <input readonly id="ValueBlockInSectorReadRK_data_input" type="text" style="width:40%">
+                        Value address: <input type="text" id="value_block_in_sector_read_value_address" style="width:30px"> </input>
+                        </input>
+                    </div>
+                    </div>
+
+                    <div id="value_block_in_sector_read_akm1" class="subfunction">
+                        
+                            <h4 class="subfunction_header"> ValueBlockInSectorRead_AKM1 </h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Sector address: <input id="value_block_in_sector_read_sector_address_akm1" type="text" style="width:30px"> </input><br>
+                            Block address:&nbsp &nbsp<input id="value_block_in_sector_read_block_address_akm1" type="text" style="width:30px">
+                            </input>
+                            <button style="margin-left:50px; width:200px" onclick="ValueBlockInSectorRead_AKM1()"> READ </button><br>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Read data: <input readonly id="ValueBlockInSectorReadAKM1_data_input" type="text" style="width:40%">
+                            Value address: <input type="text" id="value_block_in_sector_read_value_address_akm1" style="width:30px"> </input>
+                            </input>
+                        </div>
+                </div>
+
+                <div id="value_block_in_sector_read_akm2_and_PK" style="float:left; width:100%">
+
+                    <div id="value_block_in_sector_read_akm2" class="subfunction">
+                       
+                            <h4 class="subfunction_header"> ValueBlockInSectorRead_AKM2 </h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Sector address: <input id="value_block_in_sector_read_sector_address_akm2" type="text" style="width:30px"> </input><br>
+                            Block address:&nbsp &nbsp<input id="value_block_in_sector_read_block_address_akm2" type="text" style="width:30px">
+                            </input>
+                            <button style="margin-left:50px; width:200px" onclick="ValueBlockInSectorRead_AKM2()"> READ </button><br>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Read data: <input readonly id="ValueBlockInSectorReadAKM2_data_input" type="text" style="width:40%">
+                            Value address: <input type="text" id="value_block_in_sector_read_value_address_akm2" style="width:30px"> </input>
+                            </input>
+                        </div>
+                    </div>
+
+                    <div id="value_block_in_sector_read_PK" class="subfunction">
+                        <h4 class="subfunction_header"> ValueBlockInSectorRead_PK </h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Sector address: <input id="value_block_in_sector_read_sector_address_PK" type="text" style="width:30px"> </input><br>
+                            Block address:&nbsp &nbsp<input id="value_block_in_sector_read_block_address_PK" type="text" style="width:30px">
+                            </input>
+                            <button style="margin-left:50px; width:200px" onclick="ValueBlockInSectorRead_PK()"> READ </button><br>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Read data: <input readonly id="ValueBlockInSectorReadPK_data_input" type="text" style="width:40%">
+                            Value address: <input type="text" id="value_block_in_sector_read_value_address_PK" style="width:30px"> </input>
+                            </input>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div> <!-- END OF VALUE BLOCK IN SECTOR READ WRAPPER -->
+
+
+            <div id="value_block_in_sector_write_wrapper" style="float:left; width:100%; display:none;">
+                <!-- VALUE BLOCK IN SECTOR WRITE WRAPPER -->
+
+                <div id="value_block_in_sector_write_rk_and_akm1" style="float:left;width:100%">
+
+                    <div id="value_block_in_sector_write_rk" class="subfunction">
+                        <h4 class="subfunction_header"> ValueBlockInSector Write </h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Sector address: <input id="value_block_in_sector_write_sector_address" type="text" style="width:30px"> </input><br>
+                            Block address:&nbsp &nbsp<input id="value_block_in_sector_write_block_address" type="text" style="width:30px">
+                            </input>
+                            <button style="margin-left:50px; width:200px" onclick="ValueBlockInSectorWrite_RK()"> WRITE </button><br>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Write data: <input  id="ValueBlockInSectorWriteRK_data_input" type="text" style="width:40%">
+                            Value address: <input type="text" id="value_block_in_sector_write_value_address" style="width:30px"> </input>
+                            </input>
+                        </div>
+                    </div>
+
+                    <div id="value_block_in_sector_write_akm1" class="subfunction">
+                        <h4 class="subfunction_header"> ValueBlockInSectorWrite_AKM1 </h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Sector address: <input id="value_block_in_sector_write_sector_address_akm1" type="text" style="width:30px"> </input><br>
+                            Block address:&nbsp &nbsp<input id="value_block_in_sector_write_block_address_akm1" type="text" style="width:30px">
+                            </input>
+                            <button style="margin-left:50px; width:200px" onclick="ValueBlockInSectorWrite_AKM1()"> WRITE </button><br>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Write data: <input  id="ValueBlockInSectorWriteAKM1_data_input" type="text" style="width:40%">
+                            Value address: <input type="text" id="value_block_in_sector_write_value_address_akm1" style="width:30px"> </input>
+                            </input>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="value_block_in_sector_write_akm2_and_PK" style="float:left; width:100%">
+
+                    <div id="value_in_sector_block_write_akm2" class="subfunction">
+                        <h4 class="subfunction_header"> ValueBlockInSectorWrite_AKM2 </h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Sector address: <input id="value_block_in_sector_write_sector_address_akm2" type="text" style="width:30px"> </input><br>
+                            Block address:&nbsp &nbsp<input id="value_block_in_sector_write_block_address_akm2" type="text" style="width:30px">
+                            </input>
+                            <button style="margin-left:50px; width:200px" onclick="ValueBlockInSectorWrite_AKM2()"> WRITE </button><br>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Write data: <input  id="ValueBlockInSectorWriteAKM2_data_input" type="text" style="width:40%">
+                            Value address: <input type="text" id="value_block_in_sector_write_value_address_akm2" style="width:30px"> </input>
+                            </input>
+                        </div>
+                    </div>
+
+                    <div id="value_block_in_sector_write_PK" class="subfunction">
+                        <h4 class="subfunction_header"> ValueBlockInSectorWrite_PK </h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Sector address: <input id="value_block_in_sector_write_sector_address_PK" type="text" style="width:30px"> </input><br>
+                            Block address:&nbsp &nbsp<input id="value_block_in_sector_write_block_address_PK" type="text" style="width:30px">
+                            </input>
+                            <button style="margin-left:50px; width:200px" onclick="ValueBlockInSectorWrite_PK()"> WRITE </button><br>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Write data: <input  id="ValueBlockInSectorWritePK_data_input" type="text" style="width:40%">
+                            Value address: <input type="text" id="value_block_in_sector_write_value_address_PK" style="width:30px"> </input>
+                            </input>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- END OF VALUE BLOCK IN SECTOR WRITE WRAPPER -->
+
+        </div> <!-- END OF VALUE BLOCK IN SECTOR READ/WRITE WRAPPER -->
+
+
+        <div id="value_block_in_sector_increment_decrement_wrapper" style="float:left; width:100%; display:none">
+
+            <!-- VALUE BLOCK_in_sector INCREMENT/DECREMENT WRAPPER -->
+
+            <div class="scrollmenu" style="background-color: #dddddd; width:500px;">
+                <a onclick="showValueBlockInSectorIncrement()">ValueBlockInSector Increment</a>
+                <a onclick="showValueBlockInSectorDecrement()">ValueBlockInSector Decrement</a>
+            </div>
+            <div id="value_block_in_sector_increment_wrapper" style="float:left; width:100%; display:block;">
+                <!-- VALUE BLOCK_in_sector INCREMENT WRAPPER -->
+
+                <div id="value_block_in_sector_increment_rk_and_akm1" style="float:left;width:100%">
+
+                    <div id="value_block_in_sector_increment_rk" class="subfunction">
+                        <h4 class="subfunction_header">ValueBlockInSector Increment</h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Increment Value <input type="text" id="value_block_in_sector_increment_value" style="width:100px"> </input>
+                            <button onclick="ValueBlockInSectorIncrement_RK()" style="width:40%; margin-left:20px"> INCREMENT </button>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left"> 
+                            Sector address: <input id="value_block_in_sector_increment_sector_address" type="text" style="width:30px"> </input><br>
+                            Block address: &nbsp <input type="text" id="value_block_in_sector_increment_block_address" style="width:30px"> </input>
+                        </div>
+                    </div>
+
+                    <div id="value_block_in_sector_increment_akm1" class="subfunction">
+                        <h4 class="subfunction_header">ValueBlockInSectorIncrement_AKM1</h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Increment Value <input type="text" id="value_block_in_sector_increment_value_akm1" style="width:100px"> </input>
+                            <button onclick="ValueBlockInSectorIncrement_AKM1()" style="width:40%; margin-left:20px"> INCREMENT </button>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left"> 
+                            Sector address: <input id="value_block_in_sector_increment_sector_address_akm1" type="text" style="width:30px"> </input><br>
+                            Block address: &nbsp <input type="text" id="value_block_in_sector_increment_block_address_akm1" style="width:30px"> </input>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="value_block_in_sector_increment_akm2_and_PK" style="float:left; width:100%">
+
+                    <div id="value_block_in_sector_increment_akm2" class="subfunction">
+                        <h4 class="subfunction_header">ValueBlockInSectorIncrement_AKM2</h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Increment Value <input type="text" id="value_block_in_sector_increment_value_akm2" style="width:100px"> </input>
+                            <button onclick="ValueBlockInSectorIncrement_AKM2()" style="width:40%; margin-left:20px"> INCREMENT </button>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left"> 
+                            Sector address: <input id="value_block_in_sector_increment_sector_address_akm2" type="text" style="width:30px"> </input><br>
+                            Block address: &nbsp <input type="text" id="value_block_in_sector_increment_block_address_akm2" style="width:30px"> </input>
+                        </div>
+                    </div>
+
+                    <div id="value_block_in_sector_increment_PK" class="subfunction">
+                        <h4 class="subfunction_header">ValueBlockInSectorIncrement_PK</h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Increment Value <input type="text" id="value_block_in_sector_increment_value_PK" style="width:100px"> </input>
+                            <button onclick="ValueBlockInSectorIncrement_PK()" style="width:40%; margin-left:20px"> INCREMENT </button>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left"> 
+                            Sector address: <input id="value_block_in_sector_increment_sector_address_PK" type="text" style="width:30px"> </input><br>
+                            Block address: &nbsp <input type="text" id="value_block_in_sector_increment_block_address_PK" style="width:30px"> </input>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- END OF BLOCK INCREMENT WRAPPER -->
+
+
+            <div id="value_block_in_sector_decrement_wrapper" style="float:left; width:100%; display:none;">
+                <!-- VALUE BLOCK_in_sector DECREMENT WRAPPER -->
+
+                <div id="value_block_in_sector_decrement_rk_and_akm1" style="float:left;width:100%">
+
+                    <div id="value_block_in_sector_decrement_rk" class="subfunction">
+                        <h4 class="subfunction_header">ValueBlockInSector Decrement</h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Decrement Value <input type="text" id="value_block_in_sector_decrement_value" style="width:100px"> </input>
+                            <button onclick="ValueBlockInSectorDecrement_RK()" style="width:40%; margin-left:20px"> DECREMENT </button>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left"> 
+                            Sector address: <input id="value_block_in_sector_decrement_sector_address" type="text" style="width:30px"> </input><br>
+                            Block address: &nbsp <input type="text" id="value_block_in_sector_decrement_block_address" style="width:30px"> </input>
+                        </div>
+                    </div>
+
+                    <div id="value_block_in_sector_decrement_akm1" class="subfunction">
+                        <h4 class="subfunction_header">ValueBlockInSectorDecrement_AKM1</h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Decrement Value <input type="text" id="value_block_in_sector_decrement_value_akm1" style="width:100px"> </input>
+                            <button onclick="ValueBlockInSectorDecrement_AKM1()" style="width:40%; margin-left:20px"> DECREMENT </button>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left"> 
+                            Sector address: <input id="value_block_in_sector_decrement_sector_address_akm1" type="text" style="width:30px"> </input><br>
+                            Block address: &nbsp <input type="text" id="value_block_in_sector_decrement_block_address_akm1" style="width:30px"> </input>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="value_block_in_sector_write_decrement_akm2_and_PK" style="float:left; width:100%">
+
+                    <div id="value_block_in_sector_decrement_akm2" class="subfunction">
+                        <h4 class="subfunction_header">ValueBlockInSectorDecrement_AKM2</h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Decrement Value <input type="text" id="value_block_in_sector_decrement_value_akm2" style="width:100px"> </input>
+                            <button onclick="ValueBlockInSectorDecrement_AKM2()" style="width:40%; margin-left:20px"> DECREMENT </button>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left"> 
+                            Sector address: <input id="value_block_in_sector_decrement_sector_address_akm2" type="text" style="width:30px"> </input><br>
+                            Block address: &nbsp <input type="text" id="value_block_in_sector_decrement_block_address_akm2" style="width:30px"> </input>
+                        </div>
+                    </div>
+
+                    <div id="value_block_in_sector_decrement_PK" class="subfunction">
+                        <h4 class="subfunction_header">ValueBlockInSectorDecrement_PK</h4>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left">
+                            Decrement Value <input type="text" id="value_block_in_sector_decrement_value_PK" style="width:100px"> </input>
+                            <button onclick="ValueBlockInSectorDecrement_PK()" style="width:40%; margin-left:20px"> DECREMENT </button>
+                        </div>
+                        <div style="width:100%; height:20%; margin:0px 0px 20px 10px;  text-align:left"> 
+                            Sector address: <input id="value_block_in_sector_decrement_sector_address_PK" type="text" style="width:30px"> </input><br>
+                            Block address: &nbsp <input type="text" id="value_block_in_sector_decrement_block_address_PK" style="width:30px"> </input>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- END OF VALUE BLOCK DECREMENT WRAPPER -->
+
+        </div> <!-- END OF VALUE BLOCK INCREMENT/DECREMENT WRAPPER -->
+
+
+        <div id="format_keys_wrapper" style="float:left; width:100%; display:none">
+            <!-- FORMAT KEYS CONFIG WRAPPER -->
+
+            <div id="format_key_A_config"
+                style="float:left;width:45%; text-align:center;border-width: 1px 1px 1px 0px; border-style:solid">
+                <h2> KEY A CONFIG </h2>
+                <div id="sector_trailer_format_key_A" style="float:left; width:100%;  margin-top:3px;text-align:center;">
+
+                    <input style="width: 30px;" class="sector_trailer_format_key_A_input" type="text" value="255">
+                    </input>
+                    <input style="width: 30px;" class="sector_trailer_format_key_A_input" type="text" value="255">
+                    </input>
+                    <input style="width: 30px;" class="sector_trailer_format_key_A_input" type="text" value="255">
+                    </input>
+                    <input style="width: 30px;" class="sector_trailer_format_key_A_input" type="text" value="255">
+                    </input>
+                    <input style="width: 30px;" class="sector_trailer_format_key_A_input" type="text" value="255">
+                    </input>
+                    <input style="width: 30px;" class="sector_trailer_format_key_A_input" type="text" value="255">
+                    </input>
+                </div>
+                <input onclick="formatKeyAtoHex()" type="checkbox" id="format_keys_ifHexAChecked" name="hex"
+                    value="Hex">Hex
+            </div>
+
+            <div id="sector_trailer_format_key_B_config"
+                style="float:left;width:45%;text-align:center;border-width: 1px 0px 1px 0px; border-style:solid">
+                <h2> KEY B CONFIG </h2>
+                <div id="sector_trailer_format_key_B"
+                    style="float:left; width:100%;  margin-top:3px;text-align:center; ">
+
+                    <input style="width: 30px;" class="sector_trailer_format_key_B_input" type="text" value="255">
+                    </input>
+                    <input style="width: 30px;" class="sector_trailer_format_key_B_input" type="text" value="255">
+                    </input>
+                    <input style="width: 30px;" class="sector_trailer_format_key_B_input" type="text" value="255">
+                    </input>
+                    <input style="width: 30px;" class="sector_trailer_format_key_B_input" type="text" value="255">
+                    </input>
+                    <input style="width: 30px;" class="sector_trailer_format_key_B_input" type="text" value="255">
+                    </input>
+                    <input style="width: 30px;" class="sector_trailer_format_key_B_input" type="text" value="255">
+                    </input>
+                </div>
+                <input onclick="formatKeyBtoHex()" type="checkbox" id="format_keys_ifHexBChecked" name="hex"
+                    value="Hex">Hex
+            </div>
+
+        </div> <!-- END OF FORMAT KEYS CONFIG WRAPPER -->
+
+        <div id="sector_trailer_write_wrapper" style="float:left; width:100%; display:none;">
+            <!-- SECTOR TRAILER WRITE WRAPPER -->
+            <div class="scrollmenu" style="background-color: #dddddd; width:800px;">
+                <a onclick="showSectorTrailerWriteRK()">SectorTrailerWrite</a>
+                <a onclick="showSectorTrailerWriteAKM1()">SectorTrailerWrite_AKM1</a>
+                <a onclick="showSectorTrailerWriteAKM2()">SectorTrailerWrite_AKM2</a>
+                <a onclick="showSectorTrailerWritePK()">SectorTrailerWrite_PK</a>
+            </div>
+
+            <div id="sector_trailer_write_rk" class="subfunction" style="width:80%;margin-top:15px; display:block;">
+                <h4 class="subfunction_header"> SectorTrailer Write </h4>
+                <div style="width:55%; height:20%; margin:10px 0px 20px 10px; float:left;  text-align:left">
+                    Addressing mode:
+                    <select id="sector_trailer_write_rk_addressing_mode">
+                        <option value="0"> 0 </option>
+                        <option value="1"> 1 </option>
+                    </select> <br>
+                    Block or Sector Address: <input id="sector_trailer_write_rk_block_sector_address" type="text" style="width:30px"></input> <br>
+                    Access Bits 0
+                    <select id="sector_trailer_write_rk_access_bit_0">
+                        <option value="0"> 0 </option>
+                        <option value="1"> 1 </option>
+                        <option value="2"> 2 </option>
+                        <option value="3"> 3 </option>
+                        <option value="4"> 4 </option>
+                        <option value="5"> 5 </option>
+                        <option value="6"> 6 </option>
+                        <option value="7"> 7 </option>
+                    </select> <br>
+                    Access Bits 1
+                    <select id="sector_trailer_write_rk_access_bit_1">
+                        <option value="0"> 0 </option>
+                        <option value="1"> 1 </option>
+                        <option value="2"> 2 </option>
+                        <option value="3"> 3 </option>
+                        <option value="4"> 4 </option>
+                        <option value="5"> 5 </option>
+                        <option value="6"> 6 </option>
+                        <option value="7"> 7 </option>
+                    </select> <br>
+                    Access Bits 2
+                    <select id="sector_trailer_write_rk_access_bit_2">
+                        <option value="0"> 0 </option>
+                        <option value="1"> 1 </option>
+                        <option value="2"> 2 </option>
+                        <option value="3"> 3 </option>
+                        <option value="4"> 4 </option>
+                        <option value="5"> 5 </option>
+                        <option value="6"> 6 </option>
+                        <option value="7"> 7 </option>
+                    </select> <br>
+                </div>
+                <div style="width:40%; height:20%; margin:10px 0px 20px 10px; float:left; text-align:left"> 
+                    Trailer Access Bits: 
+                    <select id="sector_trailer_write_sector_trailer_access_bits_rk">
+                        <option value="0"> 0 </option>
+                        <option value="1"> 1 </option>
+                        <option value="2"> 2 </option>
+                        <option value="3"> 3 </option>
+                        <option value="4"> 4 </option>
+                        <option value="5"> 5 </option>
+                        <option value="6"> 6 </option>
+                        <option value="7"> 7 </option>
+                    </select> <br>
+                    Trailer Access Byte 9: <input  id="sector_trailer_write_rk_trailer_access_byte9"  type="text" style="width:30px"></input> <br>
+                    <button  onclick="SectorTrailerWrite_RK()" id="btnSectorTrailerWrite_RK"> WRITE </button>
+                </div>
+            </div> <!-- END OF SectorTrailerWrite()-->
+
+            <div id="sector_trailer_write_akm1" class="subfunction" style="width:80%;margin-top:15px; display:none;">
+                <h4 class="subfunction_header"> SectorTrailerWrite_AKM1 </h4>
+                <div style="width:55%; height:20%; margin:10px 0px 20px 10px; float:left;  text-align:left">
+                    Addressing mode:
+                    <select id="sector_trailer_write_akm1_addressing_mode">
+                        <option value="0"> 0 </option>
+                        <option value="1"> 1 </option>
+                    </select> <br>
+                    Block or Sector Address: <input id="sector_trailer_write_akm1_block_sector_address" type="text" style="width:30px"></input> <br>
+                    Access Bits 0
+                    <select id="sector_trailer_write_akm1_access_bit_0">
+                        <option value="0"> 0 </option>
+                        <option value="1"> 1 </option>
+                        <option value="2"> 2 </option>
+                        <option value="3"> 3 </option>
+                        <option value="4"> 4 </option>
+                        <option value="5"> 5 </option>
+                        <option value="6"> 6 </option>
+                        <option value="7"> 7 </option>
+                    </select> <br>
+                    Access Bits 1
+                    <select id="sector_trailer_write_akm1_access_bit_1">
+                        <option value="0"> 0 </option>
+                        <option value="1"> 1 </option>
+                        <option value="2"> 2 </option>
+                        <option value="3"> 3 </option>
+                        <option value="4"> 4 </option>
+                        <option value="5"> 5 </option>
+                        <option value="6"> 6 </option>
+                        <option value="7"> 7 </option>
+                    </select> <br>
+                    Access Bits 2
+                    <select id="sector_trailer_write_akm1_access_bit_2">
+                        <option value="0"> 0 </option>
+                        <option value="1"> 1 </option>
+                        <option value="2"> 2 </option>
+                        <option value="3"> 3 </option>
+                        <option value="4"> 4 </option>
+                        <option value="5"> 5 </option>
+                        <option value="6"> 6 </option>
+                        <option value="7"> 7 </option>
+                    </select> <br>
+                </div>
+                <div style="width:40%; height:20%; margin:10px 0px 20px 10px; float:left; text-align:left"> 
+                    Trailer Access Bits: 
+                    <select id="sector_trailer_write_sector_trailer_access_bits_akm1">
+                        <option value="0"> 0 </option>
+                        <option value="1"> 1 </option>
+                        <option value="2"> 2 </option>
+                        <option value="3"> 3 </option>
+                        <option value="4"> 4 </option>
+                        <option value="5"> 5 </option>
+                        <option value="6"> 6 </option>
+                        <option value="7"> 7 </option>
+                    </select> <br>
+                    Trailer Access Byte 9: <input id="sector_trailer_write_akm1_trailer_access_byte9" type="text" style="width:30px"></input> <br>
+                    <button onclick="SectorTrailerWrite_AKM1()" id="btnSectorTrailerWrite_AKM1"> WRITE </button>
+                </div>
+            </div>
+
+            <div id="sector_trailer_write_akm2" class="subfunction" style="width:80%;margin-top:15px; display:none;">
+                <h4 class="subfunction_header"> SectorTrailerWrite_AKM2 </h4>
+                <div style="width:55%; height:20%; margin:10px 0px 20px 10px; float:left;  text-align:left">
+                    Addressing mode:
+                    <select id="sector_trailer_write_akm2_addressing_mode">
+                        <option value="0"> 0 </option>
+                        <option value="1"> 1 </option>
+                    </select> <br>
+                    Block or Sector Address: <input id="sector_trailer_write_akm2_block_sector_address" type="text" style="width:30px"></input> <br>
+                    Access Bits 0
+                    <select id="sector_trailer_write_akm2_access_bit_0">
+                        <option value="0"> 0 </option>
+                        <option value="1"> 1 </option>
+                        <option value="2"> 2 </option>
+                        <option value="3"> 3 </option>
+                        <option value="4"> 4 </option>
+                        <option value="5"> 5 </option>
+                        <option value="6"> 6 </option>
+                        <option value="7"> 7 </option>
+                    </select> <br>
+                    Access Bits 1
+                    <select id="sector_trailer_write_akm2_access_bit_1">
+                        <option value="0"> 0 </option>
+                        <option value="1"> 1 </option>
+                        <option value="2"> 2 </option>
+                        <option value="3"> 3 </option>
+                        <option value="4"> 4 </option>
+                        <option value="5"> 5 </option>
+                        <option value="6"> 6 </option>
+                        <option value="7"> 7 </option>
+                    </select> <br>
+                    Access Bits 2
+                    <select id="sector_trailer_write_akm2_access_bit_2">
+                        <option value="0"> 0 </option>
+                        <option value="1"> 1 </option>
+                        <option value="2"> 2 </option>
+                        <option value="3"> 3 </option>
+                        <option value="4"> 4 </option>
+                        <option value="5"> 5 </option>
+                        <option value="6"> 6 </option>
+                        <option value="7"> 7 </option>
+                    </select> <br>
+                </div>
+                <div style="width:40%; height:20%; margin:10px 0px 20px 10px; float:left; text-align:left"> 
+                    Trailer Access Bits: 
+                    <select id="sector_trailer_write_sector_trailer_access_bits_akm2">
+                        <option value="0"> 0 </option>
+                        <option value="1"> 1 </option>
+                        <option value="2"> 2 </option>
+                        <option value="3"> 3 </option>
+                        <option value="4"> 4 </option>
+                        <option value="5"> 5 </option>
+                        <option value="6"> 6 </option>
+                        <option value="7"> 7 </option>
+                    </select> <br>
+                    Trailer Access Byte 9: <input id="sector_trailer_write_akm2_trailer_access_byte9" type="text" style="width:30px"></input> <br>
+                    <button onclick="SectorTrailerWrite_AKM2()" id="btnSectorTrailerWrite_AKM2"> WRITE </button>
+                </div>
+            </div>
+
+            <div id="sector_trailer_write_PK" class="subfunction" style="width:80%;margin-top:15px; display:none;">
+                <h4 class="subfunction_header"> SectorTrailerWrite_PK</h4>
+                <div style="width:55%; height:20%; margin:10px 0px 20px 10px; float:left;  text-align:left">
+                    Addressing mode:
+                    <select id="sector_trailer_write_PK_addressing_mode">
+                        <option value="0"> 0 </option>
+                        <option value="1"> 1 </option>
+                    </select> <br>
+                    Block or Sector Address: <input id="sector_trailer_write_PK_block_sector_address" type="text" style="width:30px"></input> <br>
+                    Access Bits 0
+                    <select id="sector_trailer_write_PK_access_bit_0">
+                        <option value="0"> 0 </option>
+                        <option value="1"> 1 </option>
+                        <option value="2"> 2 </option>
+                        <option value="3"> 3 </option>
+                        <option value="4"> 4 </option>
+                        <option value="5"> 5 </option>
+                        <option value="6"> 6 </option>
+                        <option value="7"> 7 </option>
+                    </select> <br>
+                    Access Bits 1
+                    <select id="sector_trailer_write_PK_access_bit_1">
+                        <option value="0"> 0 </option>
+                        <option value="1"> 1 </option>
+                        <option value="2"> 2 </option>
+                        <option value="3"> 3 </option>
+                        <option value="4"> 4 </option>
+                        <option value="5"> 5 </option>
+                        <option value="6"> 6 </option>
+                        <option value="7"> 7 </option>
+                    </select> <br>
+                    Access Bits 2
+                    <select id="sector_trailer_write_PK_access_bit_2">
+                        <option value="0"> 0 </option>
+                        <option value="1"> 1 </option>
+                        <option value="2"> 2 </option>
+                        <option value="3"> 3 </option>
+                        <option value="4"> 4 </option>
+                        <option value="5"> 5 </option>
+                        <option value="6"> 6 </option>
+                        <option value="7"> 7 </option>
+                    </select> <br>
+                </div>
+                <div style="width:40%; height:20%; margin:10px 0px 20px 10px; float:left; text-align:left"> 
+                    Trailer Access Bits: 
+                    <select id="sector_trailer_write_sector_trailer_access_bits_PK">
+                        <option value="0"> 0 </option>
+                        <option value="1"> 1 </option>
+                        <option value="2"> 2 </option>
+                        <option value="3"> 3 </option>
+                        <option value="4"> 4 </option>
+                        <option value="5"> 5 </option>
+                        <option value="6"> 6 </option>
+                        <option value="7"> 7 </option>
+                    </select> <br>
+                    Trailer Access Byte 9: <input id="sector_trailer_write_PK_trailer_access_byte9" type="text" style="width:30px"></input> <br>
+                    <button onclick="SectorTrailerWrite_PK()" id="btnSectorTrailerWrite_PK"> WRITE </button>
+                </div>
+            </div>
+
+
+        </div> <!-- END OF SECTOR TRAILER WRITE WRAPPER -->
+
+        <div id="linear_format_card_wrapper" style="float:left; width:100%; display:none;">
+
+                <div class="scrollmenu" style="background-color: #dddddd; width:800px;">
+                        <a onclick="showLinearFormatCardRK()">LinearFormatCard</a>
+                        <a onclick="showLinearFormatCardAKM1()">LinearFormatCard_AKM1</a>
+                        <a onclick="showLinearFormatCardAKM2()">LinearFormatCard_AKM2</a>
+                        <a onclick="showLinearFormatCardPK()">LinearFormatCard_PK</a>
+                    </div>
+
+            <div id="linear_format_card_rk" class="subfunction" style="display:block; width:55%">
+                <h4 class="subfunction_header"> LinearFormatCard</h4>
+                Block Access Bits &nbsp
+                <select id="linear_format_card_rk_block_access_bits">
+                    <option value="0"> 0 </option>
+                    <option value="1"> 1 </option>
+                    <option value="2"> 2 </option>
+                    <option value="3"> 3 </option>
+                    <option value="4"> 4 </option>
+                    <option value="5"> 5 </option>
+                    <option value="6"> 6 </option>
+                    <option value="7"> 7 </option>
+                </select> <br> <br>
+                Trailer Access Bits: 
+                    <select id="linear_format_card_rk_trailer_access_bits">
+                        <option value="0"> 0 </option>
+                        <option value="1"> 1 </option>
+                        <option value="2"> 2 </option>
+                        <option value="3"> 3 </option>
+                        <option value="4"> 4 </option>
+                        <option value="5"> 5 </option>
+                        <option value="6"> 6 </option>
+                        <option value="7"> 7 </option>
+                    </select> <br> <br>
+                    Trailer Access Byte 9: <input id="linear_format_card_rk_trailer_access_byte9" type="text" style="width:30px"></input> <br>
+                    <button onclick="LinearFormatCard_RK()" id="btnLinearFormatCard"> WRITE </button>
+            </div>
+
+            <div id="linear_format_card_akm1" class="subfunction" style="display:none; width:55%">
+                    <h4 class="subfunction_header"> LinearFormatCard_AKM1</h4>
+                    Block Access Bits &nbsp
+                    <select id="linear_format_card_akm1_block_access_bits">
+                        <option value="0"> 0 </option>
+                        <option value="1"> 1 </option>
+                        <option value="2"> 2 </option>
+                        <option value="3"> 3 </option>
+                        <option value="4"> 4 </option>
+                        <option value="5"> 5 </option>
+                        <option value="6"> 6 </option>
+                        <option value="7"> 7 </option>
+                    </select> <br> <br>
+                    Trailer Access Bits: 
+                        <select id="linear_format_card_akm1_trailer_access_bits">
+                            <option value="0"> 0 </option>
+                            <option value="1"> 1 </option>
+                            <option value="2"> 2 </option>
+                            <option value="3"> 3 </option>
+                            <option value="4"> 4 </option>
+                            <option value="5"> 5 </option>
+                            <option value="6"> 6 </option>
+                            <option value="7"> 7 </option>
+                        </select> <br> <br>
+                        Trailer Access Byte 9: <input id="linear_format_card_akm1_trailer_access_byte9" type="text" style="width:30px"></input> <br>
+                        <button onclick="LinearFormatCard_AKM1()" id="btnLinearFormatCard_AKM1"> WRITE </button>
+                </div>
+
+                <div id="linear_format_card_akm2" class="subfunction" style="display:none; width:55%">
+                        <h4 class="subfunction_header"> LinearFormatCard_AKM2</h4>
+                        Block Access Bits &nbsp
+                        <select id="linear_format_card_akm2_block_access_bits">
+                            <option value="0"> 0 </option>
+                            <option value="1"> 1 </option>
+                            <option value="2"> 2 </option>
+                            <option value="3"> 3 </option>
+                            <option value="4"> 4 </option>
+                            <option value="5"> 5 </option>
+                            <option value="6"> 6 </option>
+                            <option value="7"> 7 </option>
+                        </select> <br> <br>
+                        Trailer Access Bits: 
+                            <select id="linear_format_card_akm2_trailer_access_bits">
+                                <option value="0"> 0 </option>
+                                <option value="1"> 1 </option>
+                                <option value="2"> 2 </option>
+                                <option value="3"> 3 </option>
+                                <option value="4"> 4 </option>
+                                <option value="5"> 5 </option>
+                                <option value="6"> 6 </option>
+                                <option value="7"> 7 </option>
+                            </select> <br> <br>
+                            Trailer Access Byte 9: <input id="linear_format_card_akm2_trailer_access_byte9" type="text" style="width:30px"></input> <br>
+                            <button onclick="LinearFormatCard_AKM2()" id="btnLinearFormatCard_AKM2"> WRITE </button>
+                    </div>
+
+                    <div id="linear_format_card_PK" class="subfunction" style="display:none; width:55%">
+                            <h4 class="subfunction_header"> LinearFormatCard_PK</h4>
+                            Block Access Bits &nbsp
+                            <select id="linear_format_card_PK_block_access_bits">
+                                <option value="0"> 0 </option>
+                                <option value="1"> 1 </option>
+                                <option value="2"> 2 </option>
+                                <option value="3"> 3 </option>
+                                <option value="4"> 4 </option>
+                                <option value="5"> 5 </option>
+                                <option value="6"> 6 </option>
+                                <option value="7"> 7 </option>
+                            </select> <br> <br>
+                            Trailer Access Bits: 
+                                <select id="linear_format_card_PK_trailer_access_bits">
+                                    <option value="0"> 0 </option>
+                                    <option value="1"> 1 </option>
+                                    <option value="2"> 2 </option>
+                                    <option value="3"> 3 </option>
+                                    <option value="4"> 4 </option>
+                                    <option value="5"> 5 </option>
+                                    <option value="6"> 6 </option>
+                                    <option value="7"> 7 </option>
+                                </select> <br> <br>
+                                Trailer Access Byte 9: <input id="linear_format_card_PK_trailer_access_byte9" type="text" style="width:30px"></input> <br>
+                                <button onclick="LinearFormatCard_PK()" id="btnLinearFormatCard_PK"> WRITE </button>
+                        </div>
+        </div>
+
+        <div style="float:left; width:100%; border: solid 1px; display:none" id="view_all">
+
+                <div id="view_all_blocks_table">
+                    <table style="width:100%; float:left;">
+                        <thead>
+                     <tr>
+                        <th> S </th>
+                        <th> BiS </th>
+                        <th> Blo </th>
+                        <th> 0</th>
+                        <th> 1</th>
+                        <th> 2</th>
+                        <th> 3</th>
+                        <th> 4</th>
+                        <th> 5</th>
+                        <th> 6</th>
+                        <th> 7</th>
+                        <th> 8</th>
+                        <th> 9</th>
+                        <th> 10</th>
+                        <th> 11</th>
+                        <th> 12</th>
+                        <th> 13</th>
+                        <th> 14</th>
+                        <th> 15</th>
+                    </tr>
+                </thead>
+                <tbody  id="view_all_table"></tbody>
+                    </table>
+                </div>
+
+                <div id = "view_all_option" class="subfunction"; style="border:solid 1px; width:70%; margin-top:10px; margin-left:30px; padding: 10px;">
+                    <div id="view_auth_modes" style="float:left; width:25%">
+                        AUTH 1A &nbsp<input id="view_auth_mode_A" checked="checked" name="view_auth_mode" type="radio"></input> <br>
+                        AUTH 1B &nbsp<input id="view_auth_mode_B" name="view_auth_mode" type="radio"></input> <br>
+                    </div>
+                    <div style="float:left">
+                    Key index: <select id="view_all_key_index">
+                                </select>
+                                <script>
+                                        var select = document.getElementById('view_all_key_index'); // <!-- populates our key index combobox -->
+                                        for (var i = 0; i <= 31; i++) {
+                                            select.options[select.options.length] = new Option(i, i);
+                                        }
+                                    </script>
+                                 
+                </div>
+
+                <div id="test_table" style="float:left; width:100;display:block">
+                
+                
+                </div>
+                <button onclick="ViewAllBlocks()" id="bntViewAll"> READ CARD</button>
+                <div id="rest_of_options" style="float:left; margin-left:30px">
+                        Ascii &nbsp<input id="view_ascii" name="view_mode" type="radio"></input> <br>
+                        &nbsp Hex  &nbsp<input id="view_hex" name="view_mode" checked="checked" type="radio"></input> <br>
+                </div>
+            </div>
+
+            
+            
+        </div>
+
+        <div id="status-wrapper" style="float:left;margin-bottom:10px;padding:5px">
+            <div style="float:left; width:500px; padding:5px;display:block; border: solid 1px;"
+                id="advanced_information">
+                <br>
+                <label style="width: 100%; border-bottom:solid 1px; margin:5px" id="function_status"> Function status:
+                </label><br>
+                <label style="width: 100%;margin:5px" id="status"> Status: </label>
+            </div>
+        </div> <!-- END OF STATUS DIV -->
+    </div> <!-- END OF MAIN CONTAINER -->
+
+    </div>
+    <div id="about" style="display:none; margin-left:10%; padding:1px 16px;height:1000px;">
+        <h2>This demo serves as an uFR Simple implementation in browser along with extension and uFR shell.</h2>
+        <br> For port open with your reader you have option of choosing ReaderOpen() or ReaderOpenEx(). For ReaderOpenEx, all you
+        need to do is check the 'Advanced options' checkbox and provide suitable arguments such as reader
+        type, port name/interface etc. Upon clicking Reader Open, whether you selected Advanced options or default ones,
+        it will connect to your reader on success, and display reader type and serial number in given text boxes.
+        <br> Get Card Info will call GetCardIdEx() function and display card information such as card type, card UID
+        (card serial field) and UID size.
+        <br> Rest of functions in this example and their parameters are explained in following document:
+            <br> <h4> Mifare Examples </h4>
+            <a href="https://www.d-logic.net/code/nfc-rfid-reader-sdk/ufr-doc.git"> https://www.d-logic.net/code/nfc-rfid-reader-sdk/ufr-doc.git </a> 
+        <br>
+        
+    </div>
+</body>
+
+</html>
