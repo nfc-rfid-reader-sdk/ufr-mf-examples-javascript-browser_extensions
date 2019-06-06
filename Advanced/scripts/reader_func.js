@@ -11,7 +11,7 @@ async function ReaderOpen(e) {
 
         console.log(command);
 
-        ufRequest(command, function() {
+        ufRequest(command, async function() {
             var output = ufResponse();
             console.log(output);
 
@@ -19,6 +19,10 @@ async function ReaderOpen(e) {
                 document.getElementById("function_status").innerHTML = "Function status: " + "ReaderOpenEx() - successful";
                 document.getElementById("status").innerHTML = "Status: " + output.Status;
                 Beep();
+                await sleep(150);
+                GetReaderSerial();
+                await sleep(150);
+                GetReaderType();
             } else {
                 document.getElementById("function_status").innerHTML = "Function status: " + "ReaderOpenEx() - error occurred";
                 document.getElementById("status").innerHTML = "Status: " + output.Status;
@@ -249,15 +253,20 @@ function NewReaderKey() {
             key = key + d2h(key_data[x].value);
         }
     }
-
     
-
     var input = "ReaderKeyWrite " + key + " " + key_index;
     console.log(input);
     ufRequest(input, function() {
 
         var output = ufResponse();
-
+       
+        if (output.Status == "[0x00 (0)] UFR_OK") {
+            document.getElementById("status").innerHTML = "Status: " + output.Status;
+            document.getElementById("function_status").innerHTML = "Function status: " + "ReaderKeyWrite() - successful";
+        } else {
+            document.getElementById("status").innerHTML = "Status: " + output.Status;
+            document.getElementById("function_status").innerHTML = "Function status: " + "ReaderKeyWrite() - error occurred";
+        }
         console.log(output);
 
     });
@@ -303,13 +312,21 @@ async function WriteUserData() {
 
     var read_data = "ReadUserData";
 
-    ufRequest(read_data, function() {
+    ufRequest(read_data, async function() {
 
         var data = ufResponse();
 
         //console.log(data);
 
         document.getElementById("UserData").value = data.UserData;
+        if (data.Status == "[0x00 (0)] UFR_OK") {
+                    
+            document.getElementById("status").innerHTML = "Status: " + data.Status;
+            document.getElementById("function_status").innerHTML = "Function status: " + "WriteUserData() - successful";
+        } else {
+            document.getElementById("status").innerHTML = "Status: " + data.Status;
+            document.getElementById("function_status").innerHTML = "Function status: " + "WriteUserData() - error occurred";
+        }
 
     });
 }

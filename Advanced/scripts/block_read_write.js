@@ -189,13 +189,13 @@ function BlockRead_PK(){
      var pk_key = "0x";
         for (var x = 0; x < key_data.length; x++) {
             pk_key = pk_key + d2h(key_data[x].value);
-            console.log("key " + x + " " + pk_key);
         }
+        
     
     var block_address = document.getElementById("block_read_block_address_PK").value;
     
     
-    input = input + block_address + auth_mode + " " + key_index + " " + pk_key;
+    input = input + block_address + auth_mode + " " + pk_key;
     console.log(input);
         
         ufRequest(input, function(){
@@ -207,7 +207,7 @@ function BlockRead_PK(){
             
                 if (block_read_status == "[0x00 (0)] UFR_OK") {
                 document.getElementById("status").innerHTML = "Status: " + block_read_status;
-                document.getElementById("function_status").innerHTML = "Function status: " + "LinearWrite_PK() - successful";
+                document.getElementById("function_status").innerHTML = "Function status: " + "BlockRead_PK() - successful";
                 
                  if(document.getElementById("isBlockReadPKHexChecked").checked)
                 {

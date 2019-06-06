@@ -140,13 +140,12 @@ function ValueBlockInSectorIncrement_PK()
 
     var auth_mode = "";
 
-    var key_data = document.getElementById("pk_key").getElementsByClassName("card_key_PK_input");
+   var key_data = document.getElementById("pk_key").getElementsByClassName("card_key_PK_input");
    
-    var pk_key = "0x";
-       for (var x = 0; x < key_data.length; x++) {
-           pk_key = pk_key + d2h(key_data[x].value);
-           
-       }
+     var pk_key = "0x";
+        for (var x = 0; x < key_data.length; x++) {
+            pk_key = pk_key + d2h(key_data[x].value);
+        }
    
     if (document.getElementById("radio_auth_A_mode").checked) {
         auth_mode = " 0x60";
@@ -187,6 +186,9 @@ function ValueBlockInSectorDecrement_RK()
     var block_address = document.getElementById("value_block_in_sector_decrement_block_address").value;
 
     var auth_mode = "";
+    
+    var key_selection = document.getElementById("key_auth_indexes")
+    var key_index = key_selection.selectedIndex;
 
     if (document.getElementById("radio_auth_A_mode").checked) {
         auth_mode = " 0x60";
@@ -194,7 +196,7 @@ function ValueBlockInSectorDecrement_RK()
         auth_mode = " 0x61"
     }
 
-    input = input + value + " " + sector_address + " " + block_address + auth_mode;
+    input = input + value + " " + sector_address + " " + block_address + auth_mode + " " + key_index;
     console.log(input);
 
 
@@ -311,11 +313,12 @@ function ValueBlockInSectorDecrement_PK()
 
     var auth_mode = "";
 
-    var pk_key = "0x";
-       for (var x = 0; x < key_data.length; x++) {
-           pk_key = pk_key + d2h(key_data[x].value);
-           
-       }
+    var key_data = document.getElementById("pk_key").getElementsByClassName("card_key_PK_input");
+   
+     var pk_key = "0x";
+        for (var x = 0; x < key_data.length; x++) {
+            pk_key = pk_key + d2h(key_data[x].value);
+        }
 
     if (document.getElementById("radio_auth_A_mode").checked) {
         auth_mode = " 0x60";

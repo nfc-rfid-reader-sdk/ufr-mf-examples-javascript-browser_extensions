@@ -167,9 +167,9 @@ async function FormatCard() {
 
     var new_key_A = "0xFFFFFFFFFFFF";
     var new_key_B = "0xFFFFFFFFFFFF";
-    var block_access_bits = "1"; // 0-7 refer to API 
+    var block_access_bits = "0"; // 0-7 refer to API 
     var sector_trailers_access_bits = "1"; // 0-7 refer to API 
-    var sector_trailers_byte9 = "45";
+    var sector_trailers_byte9 = "69";
     var auth_mode = "0x60" // MIFARE_AUTHENT1A || 0x61 - MIFARE_AUTHENT1B
     var key_index = "0";
 

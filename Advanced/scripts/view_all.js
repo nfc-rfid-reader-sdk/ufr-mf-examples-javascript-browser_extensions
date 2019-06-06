@@ -22,7 +22,8 @@ document.getElementById("bntViewAll").disabled = true;
 
 var input = "BlockRead h " + block_address_input + auth_mode+ " " + key_index;
     console.log(input);
-ufRequest(input,async function(){
+    
+    ufRequest(input,async function(){
     
     output = ufResponse();
     console.log(output);

@@ -303,7 +303,7 @@ async function NewCardKeys() {
     var keyA = "0x";
     var keyB = "0x";
     var auth_mode = "";
-    var block_access_bits = "1"; // 0-7 refer to API 
+    var block_access_bits = "0"; // 0-7 refer to API 
     var sector_trailers_access_bits = "1"; // 0-7 refer to API 
     var sector_trailers_byte9 = "45";
     var key_index = "0";
@@ -381,7 +381,7 @@ function NewReaderKey()
     }
     
     var input = "ReaderKeyWrite " + key + " " + key_index;
-    //console.log(input);
+    console.log(input);
     ufRequest(input, function(){
         
         var output = ufResponse();
